@@ -310,6 +310,15 @@ class _PatientAuthSuccessScreenState extends State<PatientAuthSuccessScreen> {
                                       ],
                                     ),
                                   ],
+                                  const SizedBox(height: AppTheme.spacingMd),
+                                  PrimaryButton(
+                                    label: 'Go to Patient Dashboard',
+                                    icon: Icons.dashboard_rounded,
+                                    onPressed: () => context.go(
+                                      RouteNames.patientDashboard,
+                                      extra: patient,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

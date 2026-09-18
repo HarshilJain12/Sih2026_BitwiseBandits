@@ -309,5 +309,61 @@
   "validationVillage": "Please enter your village or town name.",
   "validationDistrict": "Please enter your district name.",
   "validationState": "Please enter your state name.",
-  "fetchingGps": "Fetching current location..."
+  "fetchingGps": "Fetching current location...",
+
+  "greetingMorning": "Good morning, {name} 👋",
+  "@greetingMorning": {
+    "description": "Morning greeting on dashboard",
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "greetingAfternoon": "Good afternoon, {name} 👋",
+  "@greetingAfternoon": {
+    "description": "Afternoon greeting on dashboard",
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "greetingEvening": "Good evening, {name} 👋",
+  "@greetingEvening": {
+    "description": "Evening greeting on dashboard",
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "greetingGeneric": "Hello, {name} 👋",
+  "@greetingGeneric": {
+    "description": "Generic greeting on dashboard",
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "patientIdLabel": "Patient ID: {id}",
+  "@patientIdLabel": {
+    "description": "Dashboard Patient ID label",
+    "placeholders": { "id": { "type": "String" } }
+  },
+  "nurseCompanionTitle": "AI Nurse Companion",
+  "findHospitalTitle": "Find the Hospital",
+  "findHospitalSubtitle": "Tell us what health problem you're facing",
+  "describeHealthProblemHint": "Describe your health problem (e.g. stomach pain, toothache)...",
+  "listeningVoiceInput": "Listening... Speak now...",
+  "speechNotAvailable": "Voice input active. Tap to start speaking.",
+  "findHospitalButton": "Find Nearby Hospitals",
+  "searchingHospitals": "Searching nearby healthcare facilities...",
+  "noHospitalsFound": "No hospitals found matching your query.",
+  "viewMap": "View Map",
+  "getDirections": "Get Directions",
+  "quickAccessTitle": "Quick Access",
+  "appointmentsTitle": "Appointments",
+  "prescriptionsTitle": "Prescriptions",
+  "referralsTitle": "Referrals",
+  "yourFollowUpsTitle": "Your Follow-ups",
+  "noUpcomingFollowUps": "No upcoming follow-ups",
+  "emergencyHelpTitle": "Emergency Help",
+  "getEmergencyHelpButton": "Call Emergency (108)",
+  "emergencyNotice": "In case of severe medical emergency, call 108 or go to the nearest hospital immediately.",
+  "navHome": "Home",
+  "navHealth": "Health",
+  "navProfile": "Profile",
+  "kmAway": "{distance} km away",
+  "@kmAway": {
+    "description": "Hospital distance label",
+    "placeholders": { "distance": { "type": "String" } }
+  },
+  "open247": "Open 24/7",
+  "emergencyServicesAvailable": "Emergency Care Available"
 }

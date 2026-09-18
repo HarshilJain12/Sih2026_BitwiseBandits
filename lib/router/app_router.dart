@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../core/constants/route_names.dart';
+import '../models/hospital_result.dart';
 import '../models/patient.dart';
 import '../models/user_role.dart';
 import '../providers/app_state_provider.dart';
@@ -13,6 +14,8 @@ import '../screens/login/hospital_admin/hospital_admin_login_screen.dart';
 import '../screens/login/patient/patient_auth_success_screen.dart';
 import '../screens/login/patient/patient_login_screen.dart';
 import '../screens/login/patient/patient_otp_screen.dart';
+import '../screens/patient_dashboard/hospital_map_screen.dart';
+import '../screens/patient_dashboard/patient_dashboard_screen.dart';
 import '../screens/registration/patient/medical_records_placeholder_screen.dart';
 import '../screens/registration/patient/patient_location_choice_screen.dart';
 import '../screens/registration/patient/patient_location_manual_screen.dart';
@@ -202,6 +205,34 @@ class AppRouter {
           builder: (context, state) {
             final role = state.extra as UserRole? ?? UserRole.patient;
             return RegistrationPlaceholderScreen(role: role);
+          },
+        ),
+
+        // Patient Home Dashboard
+        GoRoute(
+          path: RouteNames.patientDashboard,
+          builder: (context, state) {
+            final patient =
+                state.extra is Patient ? state.extra as Patient : null;
+            return PatientDashboardScreen(patient: patient);
+          },
+        ),
+
+        // Hospital Map Screen
+        GoRoute(
+          path: RouteNames.hospitalMap,
+          builder: (context, state) {
+            final map = state.extra as Map<String, dynamic>;
+            final selected = map['selectedHospital'] as HospitalResult;
+            final all = map['allHospitals'] as List<HospitalResult>;
+            final userLat = map['userLat'] as double?;
+            final userLng = map['userLng'] as double?;
+            return HospitalMapScreen(
+              selectedHospital: selected,
+              allHospitals: all,
+              userLat: userLat,
+              userLng: userLng,
+            );
           },
         ),
       ],

@@ -392,4 +392,114 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get fetchingGps => 'वर्तमान स्थान प्राप्त किया जा रहा है...';
+
+  @override
+  String greetingMorning(String name) {
+    return 'शुभ प्रभात, $name 👋';
+  }
+
+  @override
+  String greetingAfternoon(String name) {
+    return 'नमस्कार, $name 👋';
+  }
+
+  @override
+  String greetingEvening(String name) {
+    return 'शुभ संध्या, $name 👋';
+  }
+
+  @override
+  String greetingGeneric(String name) {
+    return 'नमस्ते, $name 👋';
+  }
+
+  @override
+  String patientIdLabel(String id) {
+    return 'मरीज ID: $id';
+  }
+
+  @override
+  String get nurseCompanionTitle => 'एआई नर्स साथी';
+
+  @override
+  String get findHospitalTitle => 'अस्पताल खोजें';
+
+  @override
+  String get findHospitalSubtitle =>
+      'हमें बताएं कि आपको क्या स्वास्थ्य समस्या है';
+
+  @override
+  String get describeHealthProblemHint =>
+      'अपनी स्वास्थ्य समस्या का वर्णन करें (उदा. पेट दर्द, दांत दर्द)...';
+
+  @override
+  String get listeningVoiceInput => 'सुन रहे हैं... अब बोलें...';
+
+  @override
+  String get speechNotAvailable =>
+      'आवाज इनपुट सक्रिय है। बोलने के लिए टैप करें।';
+
+  @override
+  String get findHospitalButton => 'आस-पास के अस्पताल खोजें';
+
+  @override
+  String get searchingHospitals =>
+      'निकटतम स्वास्थ्य सुविधाएं खोजी जा रही हैं...';
+
+  @override
+  String get noHospitalsFound => 'आपकी खोज से मेल खाता कोई अस्पताल नहीं मिला।';
+
+  @override
+  String get viewMap => 'मानचित्र देखें';
+
+  @override
+  String get getDirections => 'दिशा-निर्देश प्राप्त करें';
+
+  @override
+  String get quickAccessTitle => 'त्वरित पहुँच';
+
+  @override
+  String get appointmentsTitle => 'अपॉइंटमेंट';
+
+  @override
+  String get prescriptionsTitle => 'नुस्खे';
+
+  @override
+  String get referralsTitle => 'रेफ़रल';
+
+  @override
+  String get yourFollowUpsTitle => 'आपके फॉलो-अप';
+
+  @override
+  String get noUpcomingFollowUps => 'कोई आगामी फॉलो-अप नहीं है';
+
+  @override
+  String get emergencyHelpTitle => 'आपातकालीन सहायता';
+
+  @override
+  String get getEmergencyHelpButton => 'आपातकालीन कॉल (108)';
+
+  @override
+  String get emergencyNotice =>
+      'गंभीर चिकित्सा आपात स्थिति के मामले में, 108 पर कॉल करें या तुरंत नजदीकी अस्पताल जाएं।';
+
+  @override
+  String get navHome => 'होम';
+
+  @override
+  String get navHealth => 'स्वास्थ्य';
+
+  @override
+  String get navProfile => 'प्रोफ़ाइल';
+
+  @override
+  String kmAway(String distance) {
+    return '$distance किमी दूर';
+  }
+
+  @override
+  String get open247 => '24/7 खुला है';
+
+  @override
+  String get emergencyServicesAvailable => 'आपातकालीन देखभाल उपलब्ध';
 }

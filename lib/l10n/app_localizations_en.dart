@@ -391,4 +391,112 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fetchingGps => 'Fetching current location...';
+
+  @override
+  String greetingMorning(String name) {
+    return 'Good morning, $name 👋';
+  }
+
+  @override
+  String greetingAfternoon(String name) {
+    return 'Good afternoon, $name 👋';
+  }
+
+  @override
+  String greetingEvening(String name) {
+    return 'Good evening, $name 👋';
+  }
+
+  @override
+  String greetingGeneric(String name) {
+    return 'Hello, $name 👋';
+  }
+
+  @override
+  String patientIdLabel(String id) {
+    return 'Patient ID: $id';
+  }
+
+  @override
+  String get nurseCompanionTitle => 'AI Nurse Companion';
+
+  @override
+  String get findHospitalTitle => 'Find the Hospital';
+
+  @override
+  String get findHospitalSubtitle =>
+      'Tell us what health problem you\'re facing';
+
+  @override
+  String get describeHealthProblemHint =>
+      'Describe your health problem (e.g. stomach pain, toothache)...';
+
+  @override
+  String get listeningVoiceInput => 'Listening... Speak now...';
+
+  @override
+  String get speechNotAvailable => 'Voice input active. Tap to start speaking.';
+
+  @override
+  String get findHospitalButton => 'Find Nearby Hospitals';
+
+  @override
+  String get searchingHospitals => 'Searching nearby healthcare facilities...';
+
+  @override
+  String get noHospitalsFound => 'No hospitals found matching your query.';
+
+  @override
+  String get viewMap => 'View Map';
+
+  @override
+  String get getDirections => 'Get Directions';
+
+  @override
+  String get quickAccessTitle => 'Quick Access';
+
+  @override
+  String get appointmentsTitle => 'Appointments';
+
+  @override
+  String get prescriptionsTitle => 'Prescriptions';
+
+  @override
+  String get referralsTitle => 'Referrals';
+
+  @override
+  String get yourFollowUpsTitle => 'Your Follow-ups';
+
+  @override
+  String get noUpcomingFollowUps => 'No upcoming follow-ups';
+
+  @override
+  String get emergencyHelpTitle => 'Emergency Help';
+
+  @override
+  String get getEmergencyHelpButton => 'Call Emergency (108)';
+
+  @override
+  String get emergencyNotice =>
+      'In case of severe medical emergency, call 108 or go to the nearest hospital immediately.';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navHealth => 'Health';
+
+  @override
+  String get navProfile => 'Profile';
+
+  @override
+  String kmAway(String distance) {
+    return '$distance km away';
+  }
+
+  @override
+  String get open247 => 'Open 24/7';
+
+  @override
+  String get emergencyServicesAvailable => 'Emergency Care Available';
 }

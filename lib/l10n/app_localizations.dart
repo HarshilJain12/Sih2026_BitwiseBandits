@@ -819,6 +819,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fetching current location...'**
   String get fetchingGps;
+
+  /// Morning greeting on dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning, {name} 👋'**
+  String greetingMorning(String name);
+
+  /// Afternoon greeting on dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon, {name} 👋'**
+  String greetingAfternoon(String name);
+
+  /// Evening greeting on dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening, {name} 👋'**
+  String greetingEvening(String name);
+
+  /// Generic greeting on dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, {name} 👋'**
+  String greetingGeneric(String name);
+
+  /// Dashboard Patient ID label
+  ///
+  /// In en, this message translates to:
+  /// **'Patient ID: {id}'**
+  String patientIdLabel(String id);
+
+  /// No description provided for @nurseCompanionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Nurse Companion'**
+  String get nurseCompanionTitle;
+
+  /// No description provided for @findHospitalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find the Hospital'**
+  String get findHospitalTitle;
+
+  /// No description provided for @findHospitalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us what health problem you\'re facing'**
+  String get findHospitalSubtitle;
+
+  /// No description provided for @describeHealthProblemHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe your health problem (e.g. stomach pain, toothache)...'**
+  String get describeHealthProblemHint;
+
+  /// No description provided for @listeningVoiceInput.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening... Speak now...'**
+  String get listeningVoiceInput;
+
+  /// No description provided for @speechNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice input active. Tap to start speaking.'**
+  String get speechNotAvailable;
+
+  /// No description provided for @findHospitalButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Find Nearby Hospitals'**
+  String get findHospitalButton;
+
+  /// No description provided for @searchingHospitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching nearby healthcare facilities...'**
+  String get searchingHospitals;
+
+  /// No description provided for @noHospitalsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No hospitals found matching your query.'**
+  String get noHospitalsFound;
+
+  /// No description provided for @viewMap.
+  ///
+  /// In en, this message translates to:
+  /// **'View Map'**
+  String get viewMap;
+
+  /// No description provided for @getDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Directions'**
+  String get getDirections;
+
+  /// No description provided for @quickAccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Access'**
+  String get quickAccessTitle;
+
+  /// No description provided for @appointmentsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointments'**
+  String get appointmentsTitle;
+
+  /// No description provided for @prescriptionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Prescriptions'**
+  String get prescriptionsTitle;
+
+  /// No description provided for @referralsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Referrals'**
+  String get referralsTitle;
+
+  /// No description provided for @yourFollowUpsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Follow-ups'**
+  String get yourFollowUpsTitle;
+
+  /// No description provided for @noUpcomingFollowUps.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming follow-ups'**
+  String get noUpcomingFollowUps;
+
+  /// No description provided for @emergencyHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Help'**
+  String get emergencyHelpTitle;
+
+  /// No description provided for @getEmergencyHelpButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Call Emergency (108)'**
+  String get getEmergencyHelpButton;
+
+  /// No description provided for @emergencyNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'In case of severe medical emergency, call 108 or go to the nearest hospital immediately.'**
+  String get emergencyNotice;
+
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get navHealth;
+
+  /// No description provided for @navProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get navProfile;
+
+  /// Hospital distance label
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} km away'**
+  String kmAway(String distance);
+
+  /// No description provided for @open247.
+  ///
+  /// In en, this message translates to:
+  /// **'Open 24/7'**
+  String get open247;
+
+  /// No description provided for @emergencyServicesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Care Available'**
+  String get emergencyServicesAvailable;
 }
 
 class _AppLocalizationsDelegate
