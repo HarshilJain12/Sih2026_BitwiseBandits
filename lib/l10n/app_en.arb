@@ -1,0 +1,276 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Healthcare App",
+  "@appTitle": { "description": "Temporary placeholder app title" },
+
+  "chooseLanguage": "Choose your language",
+  "@chooseLanguage": { "description": "Language selection heading" },
+
+  "chooseLanguageSubtitle": "भाषा चुनें · भाषा निवडा",
+  "@chooseLanguageSubtitle": { "description": "Multilingual subtitle on language screen" },
+
+  "chooseRole": "Who are you?",
+  "@chooseRole": { "description": "Role selection screen heading" },
+
+  "chooseRoleSubtitle": "Select your role to continue",
+  "@chooseRoleSubtitle": { "description": "Role selection screen subtitle" },
+
+  "rolePatient": "Patient / Citizen",
+  "@rolePatient": { "description": "Patient role name" },
+
+  "rolePatientDesc": "Access healthcare services",
+  "@rolePatientDesc": { "description": "Patient role description" },
+
+  "roleAsha": "ASHA Worker",
+  "@roleAsha": { "description": "ASHA Worker role name" },
+
+  "roleAshaDesc": "Community health worker",
+  "@roleAshaDesc": { "description": "ASHA role description" },
+
+  "roleDoctor": "Doctor",
+  "@roleDoctor": { "description": "Doctor role name" },
+
+  "roleDoctorDesc": "Medical professional",
+  "@roleDoctorDesc": { "description": "Doctor role description" },
+
+  "roleHospitalAdmin": "Hospital Admin",
+  "@roleHospitalAdmin": { "description": "Hospital Admin role name" },
+
+  "roleHospitalAdminDesc": "Facility management",
+  "@roleHospitalAdminDesc": { "description": "Hospital Admin role description" },
+
+  "login": "Login",
+  "@login": { "description": "Generic login heading" },
+
+  "mobileNumber": "Mobile Number",
+  "@mobileNumber": { "description": "Phone number input label" },
+
+  "mobileNumberHint": "Enter 10-digit mobile number",
+  "@mobileNumberHint": { "description": "Phone number input hint" },
+
+  "continueButton": "Continue",
+  "@continueButton": { "description": "Continue button label" },
+
+  "getOtp": "Get OTP",
+  "@getOtp": { "description": "Get OTP button label" },
+
+  "otpTitle": "Verify OTP",
+  "@otpTitle": { "description": "OTP screen heading" },
+
+  "otpSentTo": "OTP sent to +91 {phone}",
+  "@otpSentTo": {
+    "description": "OTP sent confirmation message",
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+
+  "otpHint": "Enter 6-digit OTP",
+  "@otpHint": { "description": "OTP input hint" },
+
+  "verifyButton": "Verify & Login",
+  "@verifyButton": { "description": "OTP verify button" },
+
+  "resendOtp": "Resend OTP",
+  "@resendOtp": { "description": "Resend OTP link" },
+
+  "resendIn": "Resend in {seconds}s",
+  "@resendIn": {
+    "description": "Resend countdown timer",
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+
+  "ashaId": "ASHA ID",
+  "@ashaId": { "description": "ASHA ID field label" },
+
+  "ashaIdHint": "Enter your ASHA Worker ID",
+  "@ashaIdHint": { "description": "ASHA ID hint" },
+
+  "doctorId": "Doctor ID",
+  "@doctorId": { "description": "Doctor ID field label" },
+
+  "doctorIdHint": "Enter your Doctor ID",
+  "@doctorIdHint": { "description": "Doctor ID hint" },
+
+  "hospitalId": "Hospital ID",
+  "@hospitalId": { "description": "Hospital ID field label" },
+
+  "hospitalIdHint": "Enter your Hospital ID",
+  "@hospitalIdHint": { "description": "Hospital ID hint" },
+
+  "password": "Password",
+  "@password": { "description": "Password field label" },
+
+  "passwordHint": "Enter your password",
+  "@passwordHint": { "description": "Password hint" },
+
+  "loginButton": "Login",
+  "@loginButton": { "description": "Login button label" },
+
+  "firstTimeRegister": "First time? Register",
+  "@firstTimeRegister": { "description": "Registration CTA on role selection screen" },
+
+  "registerTitle": "Register",
+  "@registerTitle": { "description": "Registration screen heading" },
+
+  "registerSubtitle": "Select your role to register",
+  "@registerSubtitle": { "description": "Registration role selection subtitle" },
+
+  "comingSoon": "Coming Soon",
+  "@comingSoon": { "description": "Coming soon placeholder heading" },
+
+  "comingSoonDesc": "Registration for {role} will be implemented in the next phase.",
+  "@comingSoonDesc": {
+    "description": "Placeholder message for unimplemented registration",
+    "placeholders": {
+      "role": { "type": "String" }
+    }
+  },
+
+  "back": "Back",
+  "@back": { "description": "Back navigation label" },
+
+  "loading": "Please wait...",
+  "@loading": { "description": "Loading state message" },
+
+  "errorGeneric": "Something went wrong. Please try again.",
+  "@errorGeneric": { "description": "Generic error message" },
+
+  "errorInvalidCredentials": "Invalid ID or password. Please try again.",
+  "@errorInvalidCredentials": { "description": "Wrong credentials error" },
+
+  "errorInvalidOtp": "Invalid OTP. Please check and try again.",
+  "@errorInvalidOtp": { "description": "Wrong OTP error" },
+
+  "validationRequired": "This field is required.",
+  "@validationRequired": { "description": "Required field validation" },
+
+  "validationPhone": "Please enter a valid 10-digit mobile number.",
+  "@validationPhone": { "description": "Phone validation message" },
+
+  "validationOtp": "Please enter a valid 6-digit OTP.",
+  "@validationOtp": { "description": "OTP validation message" },
+
+  "validationMinLength": "Must be at least 6 characters.",
+  "@validationMinLength": { "description": "Min length validation message" },
+
+  "mockOtpHint": "Use 123456 for testing",
+  "@mockOtpHint": { "description": "Development hint for mock OTP" },
+
+  "selectedRole": "Selected role: {role}",
+  "@selectedRole": {
+    "description": "Shows selected role on login screen",
+    "placeholders": {
+      "role": { "type": "String" }
+    }
+  },
+
+  "phoneAuthNotice": "Your phone number will be used to verify your account. SMS charges may apply depending on your mobile operator.",
+  "@phoneAuthNotice": { "description": "Informational consent note regarding phone verification and SMS" },
+
+  "errorInvalidPhone": "Please enter a valid phone number.",
+  "@errorInvalidPhone": { "description": "Error when phone number format is invalid" },
+
+  "errorSessionExpired": "This OTP has expired. Please request a new OTP.",
+  "@errorSessionExpired": { "description": "Error when OTP session has expired" },
+
+  "errorTooManyRequests": "Too many attempts. Please wait a while and try again.",
+  "@errorTooManyRequests": { "description": "Error when rate limit is exceeded" },
+
+  "errorNetwork": "Please check your internet connection and try again.",
+  "@errorNetwork": { "description": "Error when network connection fails" },
+
+  "phoneVerifiedSuccess": "Phone verified successfully",
+  "@phoneVerifiedSuccess": { "description": "Title on temporary success screen" },
+
+  "phoneVerifiedSubtitle": "Your account has been authenticated.",
+  "@phoneVerifiedSubtitle": { "description": "Subtitle on temporary success screen" },
+
+  "firebaseAuthSuccess": "Firebase authentication successful",
+  "@firebaseAuthSuccess": { "description": "Debug card title for Firebase authentication" },
+
+  "debugFirebaseUid": "Firebase UID: {uid}",
+  "@debugFirebaseUid": {
+    "description": "Debug text displaying the authenticated Firebase UID",
+    "placeholders": {
+      "uid": { "type": "String" }
+    }
+  },
+
+  "signOut": "Sign Out",
+  "@signOut": { "description": "Sign out button text" },
+
+  "createPatientProfileTitle": "Create your patient profile",
+  "@createPatientProfileTitle": { "description": "Patient registration heading" },
+
+  "createPatientProfileSubtitle": "Enter a few basic details to get started.",
+  "@createPatientProfileSubtitle": { "description": "Patient registration subtitle" },
+
+  "fullName": "Full Name",
+  "@fullName": { "description": "Full name field label" },
+
+  "fullNameHint": "Enter full name",
+  "@fullNameHint": { "description": "Full name field hint" },
+
+  "age": "Age",
+  "@age": { "description": "Age field label" },
+
+  "ageHint": "e.g. 25",
+  "@ageHint": { "description": "Age field hint" },
+
+  "years": "years",
+  "@years": { "description": "Years unit label" },
+
+  "weight": "Weight",
+  "@weight": { "description": "Weight field label" },
+
+  "weightHint": "e.g. 65",
+  "@weightHint": { "description": "Weight field hint" },
+
+  "kg": "kg",
+  "@kg": { "description": "Kilograms unit label" },
+
+  "height": "Height",
+  "@height": { "description": "Height field label" },
+
+  "heightHint": "e.g. 170",
+  "@heightHint": { "description": "Height field hint" },
+
+  "cm": "cm",
+  "@cm": { "description": "Centimeters unit label" },
+
+  "createProfileButton": "Create Patient Profile",
+  "@createProfileButton": { "description": "Submit button on patient registration screen" },
+
+  "verifiedPhone": "Verified phone",
+  "@verifiedPhone": { "description": "Label for verified phone indicator" },
+
+  "patientProfileCreated": "Patient profile created",
+  "@patientProfileCreated": { "description": "Patient registration success title" },
+
+  "yourPatientId": "Your Patient ID",
+  "@yourPatientId": { "description": "Label above generated unique patient ID" },
+
+  "copyPatientId": "Copy Patient ID",
+  "@copyPatientId": { "description": "Copy patient ID button text" },
+
+  "patientIdCopied": "Patient ID copied to clipboard",
+  "@patientIdCopied": { "description": "Snackbar message when patient ID is copied" },
+
+  "validationName": "Please enter your name.",
+  "@validationName": { "description": "Validation error for name field" },
+
+  "validationAge": "Please enter a valid age (1–120).",
+  "@validationAge": { "description": "Validation error for age field" },
+
+  "validationWeight": "Please enter a valid weight in kg.",
+  "@validationWeight": { "description": "Validation error for weight field" },
+
+  "validationHeight": "Please enter a valid height in cm.",
+  "@validationHeight": { "description": "Validation error for height field" },
+
+  "existingProfileFound": "Existing patient profile found."
+}

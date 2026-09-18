@@ -1,0 +1,115 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import 'core/firebase/firebase_initializer.dart';
+import 'core/firebase/firebase_service.dart';
+import 'core/theme/app_theme.dart';
+import 'l10n/app_localizations.dart';
+import 'providers/app_state_provider.dart';
+import 'router/app_router.dart';
+import 'services/firebase/firebase_auth_service.dart';
+import 'services/firestore/account_service.dart';
+import 'services/firestore/patient_service.dart';
+import 'services/interfaces/auth_service.dart';
+import 'services/interfaces/storage_service.dart';
+import 'services/mock/mock_storage_service.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase before the application renders
+  await FirebaseInitializer.initialize();
+
+  const firebaseService = FirebaseService();
+  final storageService = MockStorageService();
+  final authService = FirebaseAuthService();
+  final accountService = AccountService();
+  final patientService = PatientService();
+  final appState = AppStateProvider(storageService: storageService);
+
+  await appState.initialize();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<FirebaseService>.value(value: firebaseService),
+        Provider<StorageService>.value(value: storageService),
+        Provider<AuthService>.value(value: authService),
+        Provider<AccountService>.value(value: accountService),
+        Provider<PatientService>.value(value: patientService),
+        ChangeNotifierProvider<AppStateProvider>.value(value: appState),
+      ],
+      child: const HealthcareApp(),
+    ),
+  );
+}
+
+class HealthcareApp extends StatefulWidget {
+  const HealthcareApp({super.key});
+
+  @override
+  State<HealthcareApp> createState() => _HealthcareAppState();
+}
+
+class _HealthcareAppState extends State<HealthcareApp> {
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    _router = AppRouter.createRouter(context.read<AppStateProvider>());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final appState = context.watch<AppStateProvider>();
+
+    return MaterialApp.router(
+      title: 'Arogya Seva - Maharashtra',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      locale: appState.locale,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      routerConfig: _router,
+      builder: (context, child) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        if (screenWidth > 500) {
+          return Container(
+            color: const Color(0xFF1E293B),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 430,
+                  maxHeight: 900,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.3),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: child ?? const SizedBox.shrink(),
+                ),
+              ),
+            ),
+          );
+        }
+        return child ?? const SizedBox.shrink();
+      },
+    );
+  }
+}
