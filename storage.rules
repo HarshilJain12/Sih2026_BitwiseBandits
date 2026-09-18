@@ -1,0 +1,42 @@
+rules_version = '2';
+
+// Cloud Storage Security Rules for SIH2026 Rural Healthcare App
+// Scoped by patientId under /patients/{patientId}/medicalRecords/{recordId}/{fileName}
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    match /patients/{patientId}/medicalRecords/{recordId}/{fileName} {
+      // Helper function: verifies that the authenticated user owns the parent patient document in Firestore
+      function isPatientOwner(patientId) {
+        return request.auth != null
+          && firestore.get(/databases/(default)/documents/patients/$(patientId)).data.ownerUid == request.auth.uid;
+      }
+
+      // Helper function: validates that the content is within the 10 MB limit and has an allowed MIME type
+      function isValidDocument() {
+        return request.resource.size <= 10 * 1024 * 1024
+          && (request.resource.contentType == 'application/pdf'
+              || request.resource.contentType == 'image/jpeg'
+              || request.resource.contentType == 'image/jpg'
+              || request.resource.contentType == 'image/png');
+      }
+
+      // Read: Only the authenticated patient owner can download/view their records
+      allow read: if isPatientOwner(patientId);
+
+      // Create: Only the authenticated patient owner, max 10 MB, strictly allowed MIME types
+      allow create: if isPatientOwner(patientId) && isValidDocument();
+
+      // Update: Validates BOTH file size <= 10 MB AND allowed MIME type
+      allow update: if isPatientOwner(patientId) && isValidDocument();
+
+      // Delete: Only the authenticated patient owner
+      allow delete: if isPatientOwner(patientId);
+    }
+
+    // Default Deny for all other unmapped paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

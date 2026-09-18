@@ -25,6 +25,23 @@ service cloud.firestore {
                     && resource.data.ownerUid == request.auth.uid;
       // Patients cannot be deleted — healthcare records must be preserved.
       allow delete: if false;
+
+      // ── Medical Records Subcollection ───────────────────────────────────
+      // Only the authenticated owner of the parent patient profile can read/write records.
+      match /medicalRecords/{recordId} {
+        function isPatientOwner() {
+          return request.auth != null &&
+            get(/databases/$(database)/documents/patients/$(patientId)).data.ownerUid == request.auth.uid;
+        }
+
+        allow read: if isPatientOwner();
+        allow create: if isPatientOwner()
+                      && request.resource.data.ownerUid == request.auth.uid
+                      && request.resource.data.patientId == patientId;
+        allow update: if isPatientOwner()
+                      && request.resource.data.ownerUid == request.auth.uid;
+        allow delete: if isPatientOwner();
+      }
     }
 
     // ── Default Deny ──────────────────────────────────────────────────────────

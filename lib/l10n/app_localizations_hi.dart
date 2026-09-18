@@ -58,7 +58,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get mobileNumberHint => '10 अंकों का मोबाइल नंबर दर्ज करें';
 
   @override
-  String get continueButton => 'जारी रखें';
+  String get continueButton => 'आगे बढ़ें';
 
   @override
   String get getOtp => 'OTP प्राप्त करें';
@@ -369,14 +369,180 @@ class AppLocalizationsHi extends AppLocalizations {
   String get medicalRecordsTitle => 'मेडिकल रिकॉर्ड्स';
 
   @override
-  String get medicalRecordsSubtitle => 'अगले चरण में आ रहा है';
+  String get medicalRecordsSubtitle => 'अपने मेडिकल दस्तावेज़ प्रबंधित करें';
 
   @override
   String get medicalRecordsComingSoonDesc =>
       'आने वाले चरण में, आप नुस्खे, लैब रिपोर्ट और मेडिकल इतिहास अपलोड कर सकेंगे।';
 
   @override
-  String get finishRegistration => 'पंजीकरण पूरा करें और लॉगिन पर जाएं';
+  String get finishRegistration => 'पंजीकरण पूरा करें';
+
+  @override
+  String get addMedicalRecordsTitle => 'अपने मेडिकल रिकॉर्ड जोड़ें';
+
+  @override
+  String get addMedicalRecordsSubtitle =>
+      'आप नुस्खे, लैब रिपोर्ट, स्कैन और अन्य मेडिकल दस्तावेज़ अपलोड कर सकते हैं।';
+
+  @override
+  String get addMedicalRecordButton => 'मेडिकल रिकॉर्ड जोड़ें';
+
+  @override
+  String get skipForNow => 'अभी छोड़ें';
+
+  @override
+  String get selectCategoryTitle => 'दस्तावेज़ श्रेणी चुनें';
+
+  @override
+  String get selectCategorySubtitle =>
+      'चुनें कि आप किस प्रकार का दस्तावेज़ जोड़ रहे हैं';
+
+  @override
+  String get categoryPrescription => 'प्रिस्क्रिप्शन / नुस्खा';
+
+  @override
+  String get categoryPrescriptionDesc => 'डॉक्टर की पर्ची और दवाओं की सलाह';
+
+  @override
+  String get categoryLabReport => 'लैब रिपोर्ट';
+
+  @override
+  String get categoryLabReportDesc =>
+      'रक्त परीक्षण, मूत्र परीक्षण, पैथोलॉजी रिपोर्ट';
+
+  @override
+  String get categoryScanXray => 'स्कैन / एक्स-रे';
+
+  @override
+  String get categoryScanXrayDesc =>
+      'एक्स-रे, एमआरआई, सीटी स्कैन, सोनोग्राफी रिपोर्ट';
+
+  @override
+  String get categoryDischargeSummary => 'डिस्चार्ज सारांश';
+
+  @override
+  String get categoryDischargeSummaryDesc =>
+      'अस्पताल में भर्ती और छुट्टी का सारांश';
+
+  @override
+  String get categoryOther => 'अन्य दस्तावेज़';
+
+  @override
+  String get categoryOtherDesc => 'टीकाकरण कार्ड, बिल, अन्य स्वास्थ्य पर्ची';
+
+  @override
+  String get chooseFile => 'फ़ाइल चुनें';
+
+  @override
+  String get chooseFilePrompt => 'अपने डिवाइस से पीडीएफ या छवि चुनें';
+
+  @override
+  String get supportedFormatsNotice =>
+      'अनुमत प्रारूप: PDF, JPG, PNG (अधिकतम 10 MB)';
+
+  @override
+  String get documentPreviewTitle => 'दस्तावेज़ की पुष्टि करें';
+
+  @override
+  String get documentPreviewSubtitle =>
+      'अपलोड करने से पहले दस्तावेज़ विवरण जांचें';
+
+  @override
+  String get fileNameLabel => 'फ़ाइल का नाम';
+
+  @override
+  String get fileSizeLabel => 'फ़ाइल का आकार';
+
+  @override
+  String get fileTypeLabel => 'फ़ाइल का प्रकार';
+
+  @override
+  String get categoryLabel => 'श्रेणी';
+
+  @override
+  String get notesLabel => 'नोट जोड़ें (वैकल्पिक)';
+
+  @override
+  String get notesHint => 'उदा. पिछली बार का नुस्खा';
+
+  @override
+  String get uploadButton => 'दस्तावेज़ अपलोड करें';
+
+  @override
+  String get changeFileButton => 'फ़ाइल बदलें';
+
+  @override
+  String get cancel => 'रद्द करें';
+
+  @override
+  String get uploadingTitle => 'मेडिकल रिपोर्ट अपलोड हो रही है...';
+
+  @override
+  String get uploadSuccessTitle => 'मेडिकल रिकॉर्ड जोड़ा गया';
+
+  @override
+  String get uploadSuccessDesc =>
+      'आपका मेडिकल रिकॉर्ड सुरक्षित रूप से सहेज लिया गया है।';
+
+  @override
+  String get viewMedicalRecords => 'मेडिकल रिकॉर्ड देखें';
+
+  @override
+  String get addAnotherRecord => 'अन्य रिकॉर्ड जोड़ें';
+
+  @override
+  String get noRecordsTitle => 'अभी कोई मेडिकल रिकॉर्ड नहीं है';
+
+  @override
+  String get noRecordsDesc =>
+      'आप यहां नुस्खे, लैब रिपोर्ट, स्कैन और अन्य स्वास्थ्य दस्तावेज़ जोड़ सकते हैं।';
+
+  @override
+  String get openRecord => 'खोलें';
+
+  @override
+  String get deleteRecord => 'हटाएं';
+
+  @override
+  String get deleteConfirmTitle => 'क्या यह मेडिकल रिकॉर्ड हटाना चाहते हैं?';
+
+  @override
+  String get deleteConfirmDesc =>
+      'एक बार हटाने के बाद, यह दस्तावेज़ पुनर्प्राप्त नहीं किया जा सकता।';
+
+  @override
+  String get recordDeleted => 'मेडिकल रिकॉर्ड सफलतापूर्वक हटा दिया गया';
+
+  @override
+  String get errorFileSizeExceeded =>
+      'फ़ाइल का आकार 10 MB से अधिक है। कृपया छोटी फ़ाइल चुनें।';
+
+  @override
+  String get errorUnsupportedFormat =>
+      'असमर्थित फ़ाइल प्रारूप। कृपया PDF, JPG या PNG चुनें।';
+
+  @override
+  String get errorUploadFailed =>
+      'दस्तावेज़ अपलोड करने में विफल। कृपया अपना इंटरनेट कनेक्शन जांचें।';
+
+  @override
+  String get errorDeleteFailed =>
+      'रिकॉर्ड हटाने में विफल। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get errorLoadRecordsFailed =>
+      'मेडिकल रिकॉर्ड लोड नहीं हो सके। रीफ़्रेश करने के लिए नीचे खींचें।';
+
+  @override
+  String get errorOpenDocumentFailed =>
+      'दस्तावेज़ खोलने में विफल। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get openingDocument => 'दस्तावेज़ खोला जा रहा है...';
+
+  @override
+  String get refreshRecords => 'रीफ़्रेश करने के लिए नीचे खींचें';
 
   @override
   String get validationPincode => 'कृपया एक वैध 6-अंकों का पिन कोड दर्ज करें।';

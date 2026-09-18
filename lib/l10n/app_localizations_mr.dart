@@ -369,14 +369,181 @@ class AppLocalizationsMr extends AppLocalizations {
   String get medicalRecordsTitle => 'वैद्यकीय नोंदी';
 
   @override
-  String get medicalRecordsSubtitle => 'पुढील टप्प्यात येत आहे';
+  String get medicalRecordsSubtitle => 'तुमचे वैद्यकीय दस्तऐवज व्यवस्थापित करा';
 
   @override
   String get medicalRecordsComingSoonDesc =>
       'पुढील टप्प्यात, तुम्ही औषधोपचार, लॅब अहवाल आणि वैद्यकीय इतिहास अपलोड करू शकाल.';
 
   @override
-  String get finishRegistration => 'नोंदणी पूर्ण करा आणि लॉगिनवर जा';
+  String get finishRegistration => 'नोंदणी पूर्ण करा';
+
+  @override
+  String get addMedicalRecordsTitle => 'आपले वैद्यकीय रेकॉर्ड जोडा';
+
+  @override
+  String get addMedicalRecordsSubtitle =>
+      'तुम्ही प्रिस्क्रिप्शन, लॅब रिपोर्ट, स्कॅन आणि इतर वैद्यकीय कागदपत्रे अपलोड करू शकता.';
+
+  @override
+  String get addMedicalRecordButton => 'वैद्यकीय रेकॉर्ड जोडा';
+
+  @override
+  String get skipForNow => 'आत्ता वगळा';
+
+  @override
+  String get selectCategoryTitle => 'दस्तऐवज श्रेणी निवडा';
+
+  @override
+  String get selectCategorySubtitle =>
+      'तुम्ही कोणत्या प्रकारचे कागदपत्र जोडत आहात ते निवडा';
+
+  @override
+  String get categoryPrescription => 'प्रिस्क्रिप्शन / औषधोपचार';
+
+  @override
+  String get categoryPrescriptionDesc =>
+      'डॉक्टरांचे प्रिस्क्रिप्शन आणि औषधांचा सल्ला';
+
+  @override
+  String get categoryLabReport => 'लॅब रिपोर्ट';
+
+  @override
+  String get categoryLabReportDesc =>
+      'रक्त तपासणी, लघवी तपासणी, पॅथॉलॉजी रिपोर्ट';
+
+  @override
+  String get categoryScanXray => 'स्कॅन / एक्स-रे';
+
+  @override
+  String get categoryScanXrayDesc =>
+      'एक्स-रे, एमआरआय, सीटी स्कॅन, सोनोग्राफी रिपोर्ट';
+
+  @override
+  String get categoryDischargeSummary => 'डिस्चार्ज सारांश';
+
+  @override
+  String get categoryDischargeSummaryDesc =>
+      'रुग्णालयात दाखल आणि डिस्चार्जचा सारांश';
+
+  @override
+  String get categoryOther => 'इतर दस्तऐवज';
+
+  @override
+  String get categoryOtherDesc => 'लसीकरण कार्ड, बिले, इतर आरोग्य नोंदी';
+
+  @override
+  String get chooseFile => 'फाइल निवडा';
+
+  @override
+  String get chooseFilePrompt => 'तुमच्या डिव्हाइसमधून पीडीएफ किंवा फोटो निवडा';
+
+  @override
+  String get supportedFormatsNotice =>
+      'स्वीकृत स्वरूप: PDF, JPG, PNG (कमाल १० MB)';
+
+  @override
+  String get documentPreviewTitle => 'दस्तऐवजाची खात्री करा';
+
+  @override
+  String get documentPreviewSubtitle =>
+      'अपलोड करण्यापूर्वी दस्तऐवज तपशील तपासा';
+
+  @override
+  String get fileNameLabel => 'फाइलचे नाव';
+
+  @override
+  String get fileSizeLabel => 'फाइलचा आकार';
+
+  @override
+  String get fileTypeLabel => 'फाइलचा प्रकार';
+
+  @override
+  String get categoryLabel => 'श्रेणी';
+
+  @override
+  String get notesLabel => 'नोंद जोडा (पर्यायी)';
+
+  @override
+  String get notesHint => 'उदा. मागील भेटीचे प्रिस्क्रिप्शन';
+
+  @override
+  String get uploadButton => 'दस्तऐवज अपलोड करा';
+
+  @override
+  String get changeFileButton => 'फाइल बदला';
+
+  @override
+  String get cancel => 'रद्द करा';
+
+  @override
+  String get uploadingTitle => 'वैद्यकीय अहवाल अपलोड होत आहे...';
+
+  @override
+  String get uploadSuccessTitle => 'वैद्यकीय रेकॉर्ड जोडले गेले';
+
+  @override
+  String get uploadSuccessDesc =>
+      'तुमचा वैद्यकीय रेकॉर्ड सुरक्षितपणे जतन केला गेला आहे.';
+
+  @override
+  String get viewMedicalRecords => 'वैद्यकीय रेकॉर्ड पहा';
+
+  @override
+  String get addAnotherRecord => 'आणखी रेकॉर्ड जोडा';
+
+  @override
+  String get noRecordsTitle => 'अद्याप कोणतेही वैद्यकीय रेकॉर्ड नाही';
+
+  @override
+  String get noRecordsDesc =>
+      'तुम्ही येथे प्रिस्क्रिप्शन, लॅब रिपोर्ट, स्कॅन आणि इतर आरोग्य कागदपत्रे जोडू शकता.';
+
+  @override
+  String get openRecord => 'उघडा';
+
+  @override
+  String get deleteRecord => 'हटवा';
+
+  @override
+  String get deleteConfirmTitle => 'हे वैद्यकीय रेकॉर्ड हटवायचे आहे का?';
+
+  @override
+  String get deleteConfirmDesc =>
+      'एकदा हटवल्यानंतर, हा दस्तऐवज परत मिळवता येणार नाही.';
+
+  @override
+  String get recordDeleted => 'वैद्यकीय रेकॉर्ड यशस्वीरित्या हटवले गेले';
+
+  @override
+  String get errorFileSizeExceeded =>
+      'फाइलचा आकार १० MB पेक्षा जास्त आहे. कृपया लहान फाइल निवडा.';
+
+  @override
+  String get errorUnsupportedFormat =>
+      'असमर्थित फाइल स्वरूप. कृपया PDF, JPG किंवा PNG निवडा.';
+
+  @override
+  String get errorUploadFailed =>
+      'दस्तऐवज अपलोड करण्यात अयशस्वी. कृपया इंटरनेट कनेक्शन तपासा.';
+
+  @override
+  String get errorDeleteFailed =>
+      'रेकॉर्ड हटवण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.';
+
+  @override
+  String get errorLoadRecordsFailed =>
+      'वैद्यकीय रेकॉर्ड लोड करता आले नाही. रिफ्रेश करण्यासाठी खाली ओढा.';
+
+  @override
+  String get errorOpenDocumentFailed =>
+      'दस्तऐवज उघडण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.';
+
+  @override
+  String get openingDocument => 'दस्तऐवज उघडत आहे...';
+
+  @override
+  String get refreshRecords => 'रिफ्रेश करण्यासाठी खाली ओढा';
 
   @override
   String get validationPincode => 'कृपया वैध ६-अंकी पिन कोड प्रविष्ट करा.';

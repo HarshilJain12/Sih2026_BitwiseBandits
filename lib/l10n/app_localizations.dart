@@ -775,7 +775,7 @@ abstract class AppLocalizations {
   /// No description provided for @medicalRecordsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Coming in Next Phase'**
+  /// **'Manage your medical documents'**
   String get medicalRecordsSubtitle;
 
   /// No description provided for @medicalRecordsComingSoonDesc.
@@ -787,8 +787,308 @@ abstract class AppLocalizations {
   /// No description provided for @finishRegistration.
   ///
   /// In en, this message translates to:
-  /// **'Complete & Go to Login'**
+  /// **'Complete Registration'**
   String get finishRegistration;
+
+  /// No description provided for @addMedicalRecordsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your medical records'**
+  String get addMedicalRecordsTitle;
+
+  /// No description provided for @addMedicalRecordsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You can upload prescriptions, lab reports, scans and other medical documents.'**
+  String get addMedicalRecordsSubtitle;
+
+  /// No description provided for @addMedicalRecordButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Medical Record'**
+  String get addMedicalRecordButton;
+
+  /// No description provided for @skipForNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get skipForNow;
+
+  /// No description provided for @selectCategoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Document Category'**
+  String get selectCategoryTitle;
+
+  /// No description provided for @selectCategorySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose what type of document you are adding'**
+  String get selectCategorySubtitle;
+
+  /// No description provided for @categoryPrescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Prescription'**
+  String get categoryPrescription;
+
+  /// No description provided for @categoryPrescriptionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor\'s prescriptions and medication advice'**
+  String get categoryPrescriptionDesc;
+
+  /// No description provided for @categoryLabReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab Report'**
+  String get categoryLabReport;
+
+  /// No description provided for @categoryLabReportDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Blood tests, urine tests, pathology reports'**
+  String get categoryLabReportDesc;
+
+  /// No description provided for @categoryScanXray.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan / X-Ray'**
+  String get categoryScanXray;
+
+  /// No description provided for @categoryScanXrayDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'X-rays, MRI, CT scans, ultrasound reports'**
+  String get categoryScanXrayDesc;
+
+  /// No description provided for @categoryDischargeSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Discharge Summary'**
+  String get categoryDischargeSummary;
+
+  /// No description provided for @categoryDischargeSummaryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Hospital admission and discharge notes'**
+  String get categoryDischargeSummaryDesc;
+
+  /// No description provided for @categoryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Document'**
+  String get categoryOther;
+
+  /// No description provided for @categoryOtherDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccination records, bills, other health notes'**
+  String get categoryOtherDesc;
+
+  /// No description provided for @chooseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose File'**
+  String get chooseFile;
+
+  /// No description provided for @chooseFilePrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Select PDF or Image from your device'**
+  String get chooseFilePrompt;
+
+  /// No description provided for @supportedFormatsNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed: PDF, JPG, PNG (Max 10 MB)'**
+  String get supportedFormatsNotice;
+
+  /// No description provided for @documentPreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Document'**
+  String get documentPreviewTitle;
+
+  /// No description provided for @documentPreviewSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check document details before uploading'**
+  String get documentPreviewSubtitle;
+
+  /// No description provided for @fileNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'File Name'**
+  String get fileNameLabel;
+
+  /// No description provided for @fileSizeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'File Size'**
+  String get fileSizeLabel;
+
+  /// No description provided for @fileTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'File Type'**
+  String get fileTypeLabel;
+
+  /// No description provided for @categoryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get categoryLabel;
+
+  /// No description provided for @notesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a note (optional)'**
+  String get notesLabel;
+
+  /// No description provided for @notesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Prescription from last visit'**
+  String get notesHint;
+
+  /// No description provided for @uploadButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Document'**
+  String get uploadButton;
+
+  /// No description provided for @changeFileButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Change File'**
+  String get changeFileButton;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @uploadingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading medical report...'**
+  String get uploadingTitle;
+
+  /// No description provided for @uploadSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical record added'**
+  String get uploadSuccessTitle;
+
+  /// No description provided for @uploadSuccessDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your medical record has been saved securely.'**
+  String get uploadSuccessDesc;
+
+  /// No description provided for @viewMedicalRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'View Medical Records'**
+  String get viewMedicalRecords;
+
+  /// No description provided for @addAnotherRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Another Record'**
+  String get addAnotherRecord;
+
+  /// No description provided for @noRecordsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No medical records yet'**
+  String get noRecordsTitle;
+
+  /// No description provided for @noRecordsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add prescriptions, lab reports, scans and other medical documents here.'**
+  String get noRecordsDesc;
+
+  /// No description provided for @openRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get openRecord;
+
+  /// No description provided for @deleteRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteRecord;
+
+  /// No description provided for @deleteConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this medical record?'**
+  String get deleteConfirmTitle;
+
+  /// No description provided for @deleteConfirmDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Once deleted, this document cannot be recovered.'**
+  String get deleteConfirmDesc;
+
+  /// No description provided for @recordDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical record deleted successfully'**
+  String get recordDeleted;
+
+  /// No description provided for @errorFileSizeExceeded.
+  ///
+  /// In en, this message translates to:
+  /// **'File size exceeds 10 MB limit. Please select a smaller file.'**
+  String get errorFileSizeExceeded;
+
+  /// No description provided for @errorUnsupportedFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported file format. Please select PDF, JPG, or PNG.'**
+  String get errorUnsupportedFormat;
+
+  /// No description provided for @errorUploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to upload document. Please check your internet connection and try again.'**
+  String get errorUploadFailed;
+
+  /// No description provided for @errorDeleteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete record. Please try again.'**
+  String get errorDeleteFailed;
+
+  /// No description provided for @errorLoadRecordsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load medical records. Pull down to refresh.'**
+  String get errorLoadRecordsFailed;
+
+  /// No description provided for @errorOpenDocumentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open document. Please try again.'**
+  String get errorOpenDocumentFailed;
+
+  /// No description provided for @openingDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening document...'**
+  String get openingDocument;
+
+  /// No description provided for @refreshRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down to refresh'**
+  String get refreshRecords;
 
   /// No description provided for @validationPincode.
   ///

@@ -11,10 +11,13 @@ import 'providers/app_state_provider.dart';
 import 'router/app_router.dart';
 import 'services/firebase/firebase_auth_service.dart';
 import 'services/firestore/account_service.dart';
+import 'services/firestore/medical_record_service.dart';
 import 'services/firestore/patient_service.dart';
 import 'services/interfaces/auth_service.dart';
 import 'services/interfaces/storage_service.dart';
 import 'services/mock/mock_storage_service.dart';
+import 'services/storage/firebase_medical_record_storage.dart';
+import 'services/storage/medical_record_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +30,8 @@ void main() async {
   final authService = FirebaseAuthService();
   final accountService = AccountService();
   final patientService = PatientService();
+  final medicalRecordStorage = FirebaseMedicalRecordStorage();
+  final medicalRecordService = MedicalRecordService(storage: medicalRecordStorage);
   final appState = AppStateProvider(storageService: storageService);
 
   await appState.initialize();
@@ -39,6 +44,8 @@ void main() async {
         Provider<AuthService>.value(value: authService),
         Provider<AccountService>.value(value: accountService),
         Provider<PatientService>.value(value: patientService),
+        Provider<MedicalRecordStorage>.value(value: medicalRecordStorage),
+        Provider<MedicalRecordService>.value(value: medicalRecordService),
         ChangeNotifierProvider<AppStateProvider>.value(value: appState),
       ],
       child: const HealthcareApp(),

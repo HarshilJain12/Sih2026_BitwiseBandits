@@ -368,14 +368,180 @@ class AppLocalizationsEn extends AppLocalizations {
   String get medicalRecordsTitle => 'Medical Records';
 
   @override
-  String get medicalRecordsSubtitle => 'Coming in Next Phase';
+  String get medicalRecordsSubtitle => 'Manage your medical documents';
 
   @override
   String get medicalRecordsComingSoonDesc =>
       'In the upcoming phase, you will be able to upload prescriptions, lab reports, and medical history.';
 
   @override
-  String get finishRegistration => 'Complete & Go to Login';
+  String get finishRegistration => 'Complete Registration';
+
+  @override
+  String get addMedicalRecordsTitle => 'Add your medical records';
+
+  @override
+  String get addMedicalRecordsSubtitle =>
+      'You can upload prescriptions, lab reports, scans and other medical documents.';
+
+  @override
+  String get addMedicalRecordButton => 'Add Medical Record';
+
+  @override
+  String get skipForNow => 'Skip for now';
+
+  @override
+  String get selectCategoryTitle => 'Select Document Category';
+
+  @override
+  String get selectCategorySubtitle =>
+      'Choose what type of document you are adding';
+
+  @override
+  String get categoryPrescription => 'Prescription';
+
+  @override
+  String get categoryPrescriptionDesc =>
+      'Doctor\'s prescriptions and medication advice';
+
+  @override
+  String get categoryLabReport => 'Lab Report';
+
+  @override
+  String get categoryLabReportDesc =>
+      'Blood tests, urine tests, pathology reports';
+
+  @override
+  String get categoryScanXray => 'Scan / X-Ray';
+
+  @override
+  String get categoryScanXrayDesc =>
+      'X-rays, MRI, CT scans, ultrasound reports';
+
+  @override
+  String get categoryDischargeSummary => 'Discharge Summary';
+
+  @override
+  String get categoryDischargeSummaryDesc =>
+      'Hospital admission and discharge notes';
+
+  @override
+  String get categoryOther => 'Other Document';
+
+  @override
+  String get categoryOtherDesc =>
+      'Vaccination records, bills, other health notes';
+
+  @override
+  String get chooseFile => 'Choose File';
+
+  @override
+  String get chooseFilePrompt => 'Select PDF or Image from your device';
+
+  @override
+  String get supportedFormatsNotice => 'Allowed: PDF, JPG, PNG (Max 10 MB)';
+
+  @override
+  String get documentPreviewTitle => 'Confirm Document';
+
+  @override
+  String get documentPreviewSubtitle =>
+      'Check document details before uploading';
+
+  @override
+  String get fileNameLabel => 'File Name';
+
+  @override
+  String get fileSizeLabel => 'File Size';
+
+  @override
+  String get fileTypeLabel => 'File Type';
+
+  @override
+  String get categoryLabel => 'Category';
+
+  @override
+  String get notesLabel => 'Add a note (optional)';
+
+  @override
+  String get notesHint => 'e.g. Prescription from last visit';
+
+  @override
+  String get uploadButton => 'Upload Document';
+
+  @override
+  String get changeFileButton => 'Change File';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get uploadingTitle => 'Uploading medical report...';
+
+  @override
+  String get uploadSuccessTitle => 'Medical record added';
+
+  @override
+  String get uploadSuccessDesc =>
+      'Your medical record has been saved securely.';
+
+  @override
+  String get viewMedicalRecords => 'View Medical Records';
+
+  @override
+  String get addAnotherRecord => 'Add Another Record';
+
+  @override
+  String get noRecordsTitle => 'No medical records yet';
+
+  @override
+  String get noRecordsDesc =>
+      'You can add prescriptions, lab reports, scans and other medical documents here.';
+
+  @override
+  String get openRecord => 'Open';
+
+  @override
+  String get deleteRecord => 'Delete';
+
+  @override
+  String get deleteConfirmTitle => 'Delete this medical record?';
+
+  @override
+  String get deleteConfirmDesc =>
+      'Once deleted, this document cannot be recovered.';
+
+  @override
+  String get recordDeleted => 'Medical record deleted successfully';
+
+  @override
+  String get errorFileSizeExceeded =>
+      'File size exceeds 10 MB limit. Please select a smaller file.';
+
+  @override
+  String get errorUnsupportedFormat =>
+      'Unsupported file format. Please select PDF, JPG, or PNG.';
+
+  @override
+  String get errorUploadFailed =>
+      'Failed to upload document. Please check your internet connection and try again.';
+
+  @override
+  String get errorDeleteFailed => 'Failed to delete record. Please try again.';
+
+  @override
+  String get errorLoadRecordsFailed =>
+      'Could not load medical records. Pull down to refresh.';
+
+  @override
+  String get errorOpenDocumentFailed =>
+      'Could not open document. Please try again.';
+
+  @override
+  String get openingDocument => 'Opening document...';
+
+  @override
+  String get refreshRecords => 'Pull down to refresh';
 
   @override
   String get validationPincode => 'Please enter a valid 6-digit PIN code.';

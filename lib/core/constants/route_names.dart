@@ -28,8 +28,17 @@ class RouteNames {
       '/register/patient/location/success';
   static const String medicalRecordsPlaceholder =
       '/register/patient/medical-records';
-
   // Patient Dashboard routes
   static const String patientDashboard = '/patient/dashboard';
   static const String hospitalMap = '/patient/hospital-map';
+
+  // Medical Records routes
+  static const String patientMedicalRecords =
+      '/patient/medical-records';
+  static const String addMedicalRecordCategory =
+      '/patient/medical-records/category';
+  static const String medicalRecordPreview =
+      '/patient/medical-records/preview';
+  static const String medicalRecordSuccess =
+      '/patient/medical-records/success';
 }

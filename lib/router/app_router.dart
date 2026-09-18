@@ -1,9 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../core/constants/route_names.dart';
 import '../models/hospital_result.dart';
+import '../models/medical_record.dart';
+import '../models/medical_record_category.dart';
 import '../models/patient.dart';
 import '../models/user_role.dart';
 import '../providers/app_state_provider.dart';
@@ -14,9 +18,12 @@ import '../screens/login/hospital_admin/hospital_admin_login_screen.dart';
 import '../screens/login/patient/patient_auth_success_screen.dart';
 import '../screens/login/patient/patient_login_screen.dart';
 import '../screens/login/patient/patient_otp_screen.dart';
+import '../screens/medical_records/add_medical_record_category_screen.dart';
+import '../screens/medical_records/medical_record_preview_screen.dart';
+import '../screens/medical_records/medical_record_success_screen.dart';
+import '../screens/medical_records/patient_medical_records_screen.dart';
 import '../screens/patient_dashboard/hospital_map_screen.dart';
 import '../screens/patient_dashboard/patient_dashboard_screen.dart';
-import '../screens/registration/patient/medical_records_placeholder_screen.dart';
 import '../screens/registration/patient/patient_location_choice_screen.dart';
 import '../screens/registration/patient/patient_location_manual_screen.dart';
 import '../screens/registration/patient/patient_location_map_screen.dart';
@@ -190,12 +197,98 @@ class AppRouter {
           },
         ),
 
-        // Registration - Medical Records Placeholder
+        // Medical Records (Registration & Standalone)
         GoRoute(
           path: RouteNames.medicalRecordsPlaceholder,
           builder: (context, state) {
-            final patient = state.extra as Patient;
-            return MedicalRecordsPlaceholderScreen(patient: patient);
+            if (state.extra is Patient) {
+              final patient = state.extra as Patient;
+              return PatientMedicalRecordsScreen(
+                patientId: patient.patientId,
+                patient: patient,
+                isRegistration: true,
+              );
+            } else if (state.extra is Map<String, dynamic>) {
+              final map = state.extra as Map<String, dynamic>;
+              return PatientMedicalRecordsScreen(
+                patientId: map['patientId'] as String,
+                isRegistration: map['isRegistration'] as bool? ?? false,
+              );
+            }
+            final patientId = state.extra as String? ?? '';
+            return PatientMedicalRecordsScreen(
+              patientId: patientId,
+              isRegistration: false,
+            );
+          },
+        ),
+
+        GoRoute(
+          path: RouteNames.patientMedicalRecords,
+          builder: (context, state) {
+            if (state.extra is Patient) {
+              final patient = state.extra as Patient;
+              return PatientMedicalRecordsScreen(
+                patientId: patient.patientId,
+                patient: patient,
+                isRegistration: false,
+              );
+            } else if (state.extra is Map<String, dynamic>) {
+              final map = state.extra as Map<String, dynamic>;
+              return PatientMedicalRecordsScreen(
+                patientId: map['patientId'] as String,
+                isRegistration: map['isRegistration'] as bool? ?? false,
+              );
+            }
+            final patientId = state.extra as String? ?? '';
+            return PatientMedicalRecordsScreen(
+              patientId: patientId,
+              isRegistration: false,
+            );
+          },
+        ),
+
+        // Add Medical Record - Category Selection
+        GoRoute(
+          path: RouteNames.addMedicalRecordCategory,
+          builder: (context, state) {
+            final map = state.extra as Map<String, dynamic>;
+            final patientId = map['patientId'] as String;
+            final isRegistration = map['isRegistration'] as bool? ?? false;
+            return AddMedicalRecordCategoryScreen(
+              patientId: patientId,
+              isRegistration: isRegistration,
+            );
+          },
+        ),
+
+        // Medical Record Preview & Confirmation
+        GoRoute(
+          path: RouteNames.medicalRecordPreview,
+          builder: (context, state) {
+            final map = state.extra as Map<String, dynamic>;
+            return MedicalRecordPreviewScreen(
+              patientId: map['patientId'] as String,
+              category: map['category'] as MedicalRecordCategory,
+              fileName: map['fileName'] as String,
+              fileSizeBytes: map['fileSizeBytes'] as int,
+              mimeType: map['mimeType'] as String,
+              bytes: map['bytes'] as Uint8List,
+              isRegistration: map['isRegistration'] as bool? ?? false,
+            );
+          },
+        ),
+
+        // Medical Record Upload Success
+        GoRoute(
+          path: RouteNames.medicalRecordSuccess,
+          builder: (context, state) {
+            final map = state.extra as Map<String, dynamic>;
+            return MedicalRecordSuccessScreen(
+              patientId: map['patientId'] as String,
+              record: map['record'] as MedicalRecord,
+              isRegistration: map['isRegistration'] as bool? ?? false,
+            );
           },
         ),
 
