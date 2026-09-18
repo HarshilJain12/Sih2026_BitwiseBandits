@@ -158,7 +158,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
 
       if (!mounted) return;
 
-      context.go(RouteNames.patientRegistrationSuccess, extra: createdPatient);
+      context.go(RouteNames.patientLocationChoice, extra: createdPatient);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('[PatientRegistrationScreen] Registration failed: $e');

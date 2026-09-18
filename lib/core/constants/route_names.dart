@@ -20,4 +20,12 @@ class RouteNames {
   static const String registrationPlaceholder = '/register/placeholder';
   static const String patientRegistration = '/register/patient';
   static const String patientRegistrationSuccess = '/register/patient/success';
+  static const String patientLocationChoice = '/register/patient/location';
+  static const String patientLocationMap = '/register/patient/location/map';
+  static const String patientLocationManual =
+      '/register/patient/location/manual';
+  static const String patientLocationSuccess =
+      '/register/patient/location/success';
+  static const String medicalRecordsPlaceholder =
+      '/register/patient/medical-records';
 }

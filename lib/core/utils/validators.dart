@@ -110,6 +110,51 @@ class Validators {
     return null;
   }
 
+  /// Validates a 6-digit postal PIN code.
+  static String? pincode(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'validation_pincode';
+    }
+    final trimmed = value.trim();
+    if (trimmed.length != 6 || !RegExp(r'^\d{6}$').hasMatch(trimmed)) {
+      return 'validation_pincode';
+    }
+    return null;
+  }
+
+  /// Validates village or town name.
+  static String? village(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'validation_village';
+    }
+    if (value.trim().length < 2) {
+      return 'validation_village';
+    }
+    return null;
+  }
+
+  /// Validates district name.
+  static String? district(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'validation_district';
+    }
+    if (value.trim().length < 2) {
+      return 'validation_district';
+    }
+    return null;
+  }
+
+  /// Validates state name.
+  static String? state(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'validation_state';
+    }
+    if (value.trim().length < 2) {
+      return 'validation_state';
+    }
+    return null;
+  }
+
   /// Validates that a field is not empty.
   static String? required(String? value) {
     if (value == null || value.trim().isEmpty) {

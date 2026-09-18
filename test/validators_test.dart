@@ -142,4 +142,40 @@ void main() {
       expect(Validators.otp('12a456'), equals('validation_otp'));
     });
   });
+
+  group('Validators - Location fields', () {
+    test('validates 6-digit PIN code', () {
+      expect(Validators.pincode('411001'), isNull);
+      expect(Validators.pincode('400001'), isNull);
+      expect(Validators.pincode('  413102  '), isNull);
+
+      expect(Validators.pincode(''), equals('validation_pincode'));
+      expect(Validators.pincode('41100'), equals('validation_pincode'));
+      expect(Validators.pincode('4110011'), equals('validation_pincode'));
+      expect(Validators.pincode('41100A'), equals('validation_pincode'));
+      expect(Validators.pincode(null), equals('validation_pincode'));
+    });
+
+    test('validates village / town', () {
+      expect(Validators.village('Baramati'), isNull);
+      expect(Validators.village('बारामती'), isNull);
+      expect(Validators.village(''), equals('validation_village'));
+      expect(Validators.village('A'), equals('validation_village'));
+      expect(Validators.village(null), equals('validation_village'));
+    });
+
+    test('validates district', () {
+      expect(Validators.district('Pune'), isNull);
+      expect(Validators.district('पुणे'), isNull);
+      expect(Validators.district(''), equals('validation_district'));
+      expect(Validators.district(null), equals('validation_district'));
+    });
+
+    test('validates state', () {
+      expect(Validators.state('Maharashtra'), isNull);
+      expect(Validators.state('महाराष्ट्र'), isNull);
+      expect(Validators.state(''), equals('validation_state'));
+      expect(Validators.state(null), equals('validation_state'));
+    });
+  });
 }

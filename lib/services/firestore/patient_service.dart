@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../models/patient.dart';
 import '../../models/patient_link.dart';
+import '../../models/patient_location.dart';
 import '../patient_id_generator.dart';
 
 /// Service responsible for managing patient profiles and their links to accounts.
@@ -117,6 +118,58 @@ class PatientService {
     } catch (e) {
       if (kDebugMode) {
         debugPrint('[PatientService] Error creating patient: $e');
+      }
+      rethrow;
+    }
+  }
+
+  /// Updates the geographic location of an existing patient profile.
+  ///
+  /// Updates only the `location` and `updatedAt` fields in `/patients/{patientId}`.
+  /// Client-side and Firestore security rules verify ownership before writing.
+  Future<Patient> updatePatientLocation({
+    required String patientId,
+    required PatientLocation location,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw StateError(
+        'Cannot update patient location: no authenticated user. '
+        'Ensure Firebase Phone Auth is completed before calling this method.',
+      );
+    }
+
+    final docRef = _patientsRef.doc(patientId);
+
+    try {
+      final snapshot = await docRef.get();
+      if (!snapshot.exists) {
+        throw StateError('Patient $patientId does not exist.');
+      }
+
+      final existing = Patient.fromFirestore(snapshot);
+      if (existing.ownerUid != user.uid) {
+        throw StateError(
+          'Access denied: user ${user.uid} does not own patient $patientId.',
+        );
+      }
+
+      await docRef.update({
+        'location': location.toMap(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      if (kDebugMode) {
+        debugPrint(
+          '[PatientService] Updated location for patient $patientId (source: ${location.source}).',
+        );
+      }
+
+      final updatedSnapshot = await docRef.get();
+      return Patient.fromFirestore(updatedSnapshot);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[PatientService] Error updating patient location: $e');
       }
       rethrow;
     }

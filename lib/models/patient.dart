@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'patient_location.dart';
+
 /// Strongly typed model for the `/patients/{patientId}` Firestore document.
 ///
 /// Represents an individual human being's patient profile.
@@ -7,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Important design principles:
 /// - Patient ID ≠ Firebase UID ≠ Phone Number (three separate concepts)
 /// - One account may own multiple patient profiles (family members)
-/// - Only identity fields are stored in this phase — no medical history,
+/// - Only identity and location fields are stored in this phase — no medical history,
 ///   documents, appointments, or prescriptions
 class Patient {
   const Patient({
@@ -18,6 +20,7 @@ class Patient {
     this.age,
     this.weightKg,
     this.heightCm,
+    this.location,
     required this.createdAt,
     required this.updatedAt,
     this.status = 'active',
@@ -45,6 +48,9 @@ class Patient {
   /// Patient height in centimeters.
   final double? heightCm;
 
+  /// Patient geographic location (optional, backward-compatible).
+  final PatientLocation? location;
+
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -58,6 +64,14 @@ class Patient {
     DocumentSnapshot<Map<String, dynamic>> snapshot,
   ) {
     final data = snapshot.data() ?? {};
+
+    PatientLocation? parsedLocation;
+    if (data['location'] is Map<String, dynamic>) {
+      parsedLocation = PatientLocation.fromMap(
+        data['location'] as Map<String, dynamic>,
+      );
+    }
+
     return Patient(
       patientId: data['patientId'] as String? ?? snapshot.id,
       ownerUid: data['ownerUid'] as String? ?? '',
@@ -66,6 +80,7 @@ class Patient {
       age: (data['age'] as num?)?.toInt(),
       weightKg: (data['weightKg'] as num?)?.toDouble(),
       heightCm: (data['heightCm'] as num?)?.toDouble(),
+      location: parsedLocation,
       createdAt: _parseTimestamp(data['createdAt']),
       updatedAt: _parseTimestamp(data['updatedAt']),
       status: data['status'] as String? ?? 'active',
@@ -100,6 +115,9 @@ class Patient {
     if (heightCm != null) {
       map['heightCm'] = heightCm;
     }
+    if (location != null) {
+      map['location'] = location!.toMap();
+    }
 
     return map;
   }
@@ -113,6 +131,7 @@ class Patient {
     int? age,
     double? weightKg,
     double? heightCm,
+    PatientLocation? location,
     DateTime? createdAt,
     DateTime? updatedAt,
     String? status,
@@ -125,6 +144,7 @@ class Patient {
       age: age ?? this.age,
       weightKg: weightKg ?? this.weightKg,
       heightCm: heightCm ?? this.heightCm,
+      location: location ?? this.location,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       status: status ?? this.status,
@@ -144,7 +164,7 @@ class Patient {
 
   @override
   String toString() =>
-      'Patient(id=$patientId, owner=$ownerUid, name=$name, age=$age, weightKg=$weightKg, heightCm=$heightCm)';
+      'Patient(id=$patientId, owner=$ownerUid, name=$name, age=$age, location=$location)';
 
   @override
   bool operator ==(Object other) =>

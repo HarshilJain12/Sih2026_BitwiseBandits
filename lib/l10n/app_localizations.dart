@@ -597,6 +597,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Existing patient profile found.'**
   String get existingProfileFound;
+
+  /// No description provided for @locationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Location'**
+  String get locationTitle;
+
+  /// No description provided for @locationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how you want to provide your location'**
+  String get locationSubtitle;
+
+  /// No description provided for @useCurrentLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Current Location'**
+  String get useCurrentLocation;
+
+  /// No description provided for @useCurrentLocationDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetch location automatically using GPS'**
+  String get useCurrentLocationDesc;
+
+  /// No description provided for @enterLocationManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Location Manually'**
+  String get enterLocationManually;
+
+  /// No description provided for @enterLocationManuallyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter village, district, and PIN code'**
+  String get enterLocationManuallyDesc;
+
+  /// No description provided for @confirmLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Location'**
+  String get confirmLocation;
+
+  /// No description provided for @selectedLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Location'**
+  String get selectedLocation;
+
+  /// No description provided for @adjustPinPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Move map to place the pin on your exact location'**
+  String get adjustPinPrompt;
+
+  /// No description provided for @village.
+  ///
+  /// In en, this message translates to:
+  /// **'Village / Town'**
+  String get village;
+
+  /// No description provided for @villageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter village or town name'**
+  String get villageHint;
+
+  /// No description provided for @district.
+  ///
+  /// In en, this message translates to:
+  /// **'District'**
+  String get district;
+
+  /// No description provided for @districtHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Pune, Satara, Nagpur'**
+  String get districtHint;
+
+  /// No description provided for @state.
+  ///
+  /// In en, this message translates to:
+  /// **'State'**
+  String get state;
+
+  /// No description provided for @stateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Maharashtra'**
+  String get stateHint;
+
+  /// No description provided for @pincode.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN Code'**
+  String get pincode;
+
+  /// No description provided for @pincodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'6-digit postal code'**
+  String get pincodeHint;
+
+  /// No description provided for @fullAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Address (Optional)'**
+  String get fullAddress;
+
+  /// No description provided for @fullAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'House no., street, landmark'**
+  String get fullAddressHint;
+
+  /// No description provided for @saveLocationButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Location'**
+  String get saveLocationButton;
+
+  /// No description provided for @locationSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Saved'**
+  String get locationSaved;
+
+  /// No description provided for @locationSavedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your location details have been linked to your patient profile.'**
+  String get locationSavedDesc;
+
+  /// No description provided for @locationPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission is required to detect your current position.'**
+  String get locationPermissionRequired;
+
+  /// No description provided for @locationServicesDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Device location services are turned off. Please turn on GPS.'**
+  String get locationServicesDisabled;
+
+  /// No description provided for @locationFetchFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not fetch GPS location. Please check your signal or enter manually.'**
+  String get locationFetchFailed;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get openSettings;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @orEnterManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Or Enter Location Manually'**
+  String get orEnterManually;
+
+  /// No description provided for @medicalRecordsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Records'**
+  String get medicalRecordsTitle;
+
+  /// No description provided for @medicalRecordsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming in Next Phase'**
+  String get medicalRecordsSubtitle;
+
+  /// No description provided for @medicalRecordsComingSoonDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'In the upcoming phase, you will be able to upload prescriptions, lab reports, and medical history.'**
+  String get medicalRecordsComingSoonDesc;
+
+  /// No description provided for @finishRegistration.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete & Go to Login'**
+  String get finishRegistration;
+
+  /// No description provided for @validationPincode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid 6-digit PIN code.'**
+  String get validationPincode;
+
+  /// No description provided for @validationVillage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your village or town name.'**
+  String get validationVillage;
+
+  /// No description provided for @validationDistrict.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your district name.'**
+  String get validationDistrict;
+
+  /// No description provided for @validationState.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your state name.'**
+  String get validationState;
+
+  /// No description provided for @fetchingGps.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching current location...'**
+  String get fetchingGps;
 }
 
 class _AppLocalizationsDelegate

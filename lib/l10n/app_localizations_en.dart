@@ -273,4 +273,122 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get existingProfileFound => 'Existing patient profile found.';
+
+  @override
+  String get locationTitle => 'Select Location';
+
+  @override
+  String get locationSubtitle => 'Choose how you want to provide your location';
+
+  @override
+  String get useCurrentLocation => 'Use Current Location';
+
+  @override
+  String get useCurrentLocationDesc => 'Fetch location automatically using GPS';
+
+  @override
+  String get enterLocationManually => 'Enter Location Manually';
+
+  @override
+  String get enterLocationManuallyDesc =>
+      'Enter village, district, and PIN code';
+
+  @override
+  String get confirmLocation => 'Confirm Location';
+
+  @override
+  String get selectedLocation => 'Selected Location';
+
+  @override
+  String get adjustPinPrompt =>
+      'Move map to place the pin on your exact location';
+
+  @override
+  String get village => 'Village / Town';
+
+  @override
+  String get villageHint => 'Enter village or town name';
+
+  @override
+  String get district => 'District';
+
+  @override
+  String get districtHint => 'e.g. Pune, Satara, Nagpur';
+
+  @override
+  String get state => 'State';
+
+  @override
+  String get stateHint => 'e.g. Maharashtra';
+
+  @override
+  String get pincode => 'PIN Code';
+
+  @override
+  String get pincodeHint => '6-digit postal code';
+
+  @override
+  String get fullAddress => 'Full Address (Optional)';
+
+  @override
+  String get fullAddressHint => 'House no., street, landmark';
+
+  @override
+  String get saveLocationButton => 'Save Location';
+
+  @override
+  String get locationSaved => 'Location Saved';
+
+  @override
+  String get locationSavedDesc =>
+      'Your location details have been linked to your patient profile.';
+
+  @override
+  String get locationPermissionRequired =>
+      'Location permission is required to detect your current position.';
+
+  @override
+  String get locationServicesDisabled =>
+      'Device location services are turned off. Please turn on GPS.';
+
+  @override
+  String get locationFetchFailed =>
+      'Could not fetch GPS location. Please check your signal or enter manually.';
+
+  @override
+  String get openSettings => 'Open Settings';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get orEnterManually => 'Or Enter Location Manually';
+
+  @override
+  String get medicalRecordsTitle => 'Medical Records';
+
+  @override
+  String get medicalRecordsSubtitle => 'Coming in Next Phase';
+
+  @override
+  String get medicalRecordsComingSoonDesc =>
+      'In the upcoming phase, you will be able to upload prescriptions, lab reports, and medical history.';
+
+  @override
+  String get finishRegistration => 'Complete & Go to Login';
+
+  @override
+  String get validationPincode => 'Please enter a valid 6-digit PIN code.';
+
+  @override
+  String get validationVillage => 'Please enter your village or town name.';
+
+  @override
+  String get validationDistrict => 'Please enter your district name.';
+
+  @override
+  String get validationState => 'Please enter your state name.';
+
+  @override
+  String get fetchingGps => 'Fetching current location...';
 }

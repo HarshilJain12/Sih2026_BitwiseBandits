@@ -273,5 +273,124 @@ class AppLocalizationsMr extends AppLocalizations {
   String get validationHeight => 'कृपया सें.मी. मध्ये वैध उंची प्रविष्ट करा.';
 
   @override
-  String get existingProfileFound => 'विद्यमान रुग्ण प्रोफाइल आढळली.';
+  String get existingProfileFound => 'विद्यमान रुग्ण प्रोफाइल आढळली।';
+
+  @override
+  String get locationTitle => 'स्थान निवडा';
+
+  @override
+  String get locationSubtitle => 'आपले स्थान प्रदान करण्याचा मार्ग निवडा';
+
+  @override
+  String get useCurrentLocation => 'चालू स्थान वापरा';
+
+  @override
+  String get useCurrentLocationDesc => 'जीपीएस वापरून आपोआप स्थान मिळवा';
+
+  @override
+  String get enterLocationManually => 'स्वतः स्थान प्रविष्ट करा';
+
+  @override
+  String get enterLocationManuallyDesc =>
+      'गाव, जिल्हा आणि पिन कोड प्रविष्ट करा';
+
+  @override
+  String get confirmLocation => 'स्थानाची पुष्टी करा';
+
+  @override
+  String get selectedLocation => 'निवडलेले स्थान';
+
+  @override
+  String get adjustPinPrompt =>
+      'पिन आपल्या अचूक स्थानावर ठेवण्यासाठी नकाशा हलवा';
+
+  @override
+  String get village => 'गाव / शहर';
+
+  @override
+  String get villageHint => 'गाव किंवा शहराचे नाव प्रविष्ट करा';
+
+  @override
+  String get district => 'जिल्हा';
+
+  @override
+  String get districtHint => 'उदा. पुणे, सातारा, नागपूर';
+
+  @override
+  String get state => 'राज्य';
+
+  @override
+  String get stateHint => 'उदा. महाराष्ट्र';
+
+  @override
+  String get pincode => 'पिन कोड';
+
+  @override
+  String get pincodeHint => '६-अंकी पिन कोड';
+
+  @override
+  String get fullAddress => 'संपूर्ण पत्ता (पर्यायी)';
+
+  @override
+  String get fullAddressHint => 'घर क्रमांक, गल्ली, लँडमार्क';
+
+  @override
+  String get saveLocationButton => 'स्थान जतन करा';
+
+  @override
+  String get locationSaved => 'स्थान जतन केले';
+
+  @override
+  String get locationSavedDesc =>
+      'तुमचा स्थान तपशील तुमच्या रुग्ण प्रोफाइलशी जोडला गेला आहे.';
+
+  @override
+  String get locationPermissionRequired =>
+      'आपले चालू स्थान शोधण्यासाठी स्थानाची परवानगी आवश्यक आहे.';
+
+  @override
+  String get locationServicesDisabled =>
+      'डिव्हाइस स्थान सेवा बंद आहेत. कृपया जीपीएस चालू करा.';
+
+  @override
+  String get locationFetchFailed =>
+      'जीपीएस स्थान मिळवता आले नाही. कृपया सिग्नल तपासा किंवा स्वतः प्रविष्ट करा.';
+
+  @override
+  String get openSettings => 'सेटिंग्ज उघडा';
+
+  @override
+  String get tryAgain => 'पुन्हा प्रयत्न करा';
+
+  @override
+  String get orEnterManually => 'किंवा स्वतः स्थान प्रविष्ट करा';
+
+  @override
+  String get medicalRecordsTitle => 'वैद्यकीय नोंदी';
+
+  @override
+  String get medicalRecordsSubtitle => 'पुढील टप्प्यात येत आहे';
+
+  @override
+  String get medicalRecordsComingSoonDesc =>
+      'पुढील टप्प्यात, तुम्ही औषधोपचार, लॅब अहवाल आणि वैद्यकीय इतिहास अपलोड करू शकाल.';
+
+  @override
+  String get finishRegistration => 'नोंदणी पूर्ण करा आणि लॉगिनवर जा';
+
+  @override
+  String get validationPincode => 'कृपया वैध ६-अंकी पिन कोड प्रविष्ट करा.';
+
+  @override
+  String get validationVillage =>
+      'कृपया आपल्या गावाचे किंवा शहराचे नाव प्रविष्ट करा.';
+
+  @override
+  String get validationDistrict => 'कृपया आपल्या जिल्ह्याचे नाव प्रविष्ट करा.';
+
+  @override
+  String get validationState => 'कृपया आपल्या राज्याचे नाव प्रविष्ट करा.';
+
+  @override
+  String get fetchingGps => 'चालू स्थान शोधत आहे...';
 }
