@@ -140,5 +140,50 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('लॅब रिपोर्ट'), findsOneWidget);
     });
+
+    testWidgets('errorUploadFailed is updated to local storage message', (tester) async {
+      late AppLocalizations enL10n;
+      late AppLocalizations hiL10n;
+      late AppLocalizations mrL10n;
+
+      await tester.pumpWidget(
+        createTestApp(
+          Builder(
+            builder: (ctx) {
+              enL10n = AppLocalizations.of(ctx)!;
+              return const SizedBox();
+            },
+          ),
+          locale: const Locale('en'),
+        ),
+      );
+      expect(enL10n.errorUploadFailed, "Couldn't save the document. Please try again.");
+
+      await tester.pumpWidget(
+        createTestApp(
+          Builder(
+            builder: (ctx) {
+              hiL10n = AppLocalizations.of(ctx)!;
+              return const SizedBox();
+            },
+          ),
+          locale: const Locale('hi'),
+        ),
+      );
+      expect(hiL10n.errorUploadFailed, 'दस्तावेज़ सहेजने में विफल। कृपया पुनः प्रयास करें।');
+
+      await tester.pumpWidget(
+        createTestApp(
+          Builder(
+            builder: (ctx) {
+              mrL10n = AppLocalizations.of(ctx)!;
+              return const SizedBox();
+            },
+          ),
+          locale: const Locale('mr'),
+        ),
+      );
+      expect(mrL10n.errorUploadFailed, 'दस्तऐवज जतन करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.');
+    });
   });
 }

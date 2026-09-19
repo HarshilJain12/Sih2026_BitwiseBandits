@@ -25,11 +25,10 @@ class PatientLink {
 
   final DateTime createdAt;
 
-  /// Creates a [PatientLink] from a Firestore document snapshot.
   factory PatientLink.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
   ) {
-    final data = snapshot.data()!;
+    final data = snapshot.data() ?? {};
     return PatientLink(
       patientId: data['patientId'] as String? ?? snapshot.id,
       relationship: data['relationship'] as String? ?? 'self',

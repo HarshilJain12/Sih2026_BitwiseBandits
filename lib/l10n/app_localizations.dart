@@ -1057,7 +1057,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorUploadFailed.
   ///
   /// In en, this message translates to:
-  /// **'Failed to upload document. Please check your internet connection and try again.'**
+  /// **'Couldn\'t save the document. Please try again.'**
   String get errorUploadFailed;
 
   /// No description provided for @errorDeleteFailed.

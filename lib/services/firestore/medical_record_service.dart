@@ -6,8 +6,8 @@ import 'package:flutter/foundation.dart';
 
 import '../../models/medical_record.dart';
 import '../record_id_generator.dart';
-import '../storage/firebase_medical_record_storage.dart';
 import '../storage/medical_record_storage.dart';
+import '../storage/supabase_medical_record_storage.dart';
 
 /// Service responsible for managing medical record metadata in Firestore
 /// and coordinating with the [MedicalRecordStorage] provider.
@@ -15,14 +15,14 @@ import '../storage/medical_record_storage.dart';
 /// Subcollection location:
 /// `/patients/{patientId}/medicalRecords/{recordId}`
 ///
-/// Current Production & Prototype Architecture:
+/// Active Architecture:
+/// `MedicalRecordService` -> `MedicalRecordStorage` -> `SupabaseMedicalRecordStorage` (Cloud Storage)
+///
+/// Future Alternative Architecture:
 /// `MedicalRecordService` -> `MedicalRecordStorage` -> `FirebaseMedicalRecordStorage` (Cloud Storage)
 ///
-/// Future Offline Architecture:
-/// `MedicalRecordService` -> `MedicalRecordStorage` -> `LocalMedicalRecordStorage` (Local on-device)
-///
 /// Follows rural-first principles:
-/// - Isolated per-patient subcollections and local directories.
+/// - Isolated per-patient subcollections and secure Firebase UID storage sandboxing.
 /// - Defensive client-side authentication and ownership verification.
 /// - Clean coordinated deletion (Storage file + Firestore metadata) to avoid orphaned data.
 /// - Original file preservation for future AI extraction.
@@ -34,7 +34,7 @@ class MedicalRecordService {
     RecordIdGenerator? idGenerator,
   }) : _firestore = firestore ?? FirebaseFirestore.instance,
        _auth = auth ?? FirebaseAuth.instance,
-       _storage = storage ?? FirebaseMedicalRecordStorage(),
+       _storage = storage ?? SupabaseMedicalRecordStorage(),
        _idGenerator = idGenerator ?? const RecordIdGenerator();
 
   final FirebaseFirestore _firestore;
@@ -59,7 +59,7 @@ class MedicalRecordService {
   /// Flow:
   /// 1. Verifies authentication and patient profile ownership.
   /// 2. Generates unique Medical Record ID (`MR-XXXXXXXXXX`).
-  /// 3. Stores binary file using [_storage] (defaults to Local storage).
+  /// 3. Stores binary file using [_storage] (Supabase storage in private bucket).
   /// 4. Creates Firestore metadata document in `/patients/{patientId}/medicalRecords/{recordId}`.
   ///
   /// Returns the created [MedicalRecord].
@@ -101,6 +101,7 @@ class MedicalRecordService {
 
     // 3. Store file bytes using storage provider
     final uploadResult = await _storage.uploadBytes(
+      ownerUid: uid,
       patientId: patientId,
       recordId: recordId,
       originalFileName: originalFileName,

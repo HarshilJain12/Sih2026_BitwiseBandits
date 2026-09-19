@@ -115,7 +115,11 @@ class _PatientMedicalRecordsScreenState
   }
 
   void _handleFinishOrSkip() {
-    context.go(RouteNames.patientAuthSuccess);
+    if (widget.patient != null) {
+      context.go(RouteNames.patientDashboard, extra: widget.patient);
+    } else {
+      context.go(RouteNames.patientDashboard);
+    }
   }
 
   @override

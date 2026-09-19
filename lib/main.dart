@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'core/config/supabase_initializer.dart';
 import 'core/firebase/firebase_initializer.dart';
 import 'core/firebase/firebase_service.dart';
 import 'core/theme/app_theme.dart';
@@ -16,8 +17,8 @@ import 'services/firestore/patient_service.dart';
 import 'services/interfaces/auth_service.dart';
 import 'services/interfaces/storage_service.dart';
 import 'services/mock/mock_storage_service.dart';
-import 'services/storage/firebase_medical_record_storage.dart';
 import 'services/storage/medical_record_storage.dart';
+import 'services/storage/supabase_medical_record_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,12 +26,15 @@ void main() async {
   // Initialize Firebase before the application renders
   await FirebaseInitializer.initialize();
 
+  // Initialize Supabase with Firebase Third-Party Auth integration
+  await SupabaseInitializer.initialize();
+
   const firebaseService = FirebaseService();
   final storageService = MockStorageService();
   final authService = FirebaseAuthService();
   final accountService = AccountService();
   final patientService = PatientService();
-  final medicalRecordStorage = FirebaseMedicalRecordStorage();
+  final medicalRecordStorage = SupabaseMedicalRecordStorage();
   final medicalRecordService = MedicalRecordService(storage: medicalRecordStorage);
   final appState = AppStateProvider(storageService: storageService);
 

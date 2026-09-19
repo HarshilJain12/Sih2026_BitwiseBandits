@@ -525,7 +525,7 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get errorUploadFailed =>
-      'दस्तऐवज अपलोड करण्यात अयशस्वी. कृपया इंटरनेट कनेक्शन तपासा.';
+      'दस्तऐवज जतन करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.';
 
   @override
   String get errorDeleteFailed =>

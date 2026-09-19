@@ -10,6 +10,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/validators.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../providers/app_state_provider.dart';
 import '../../../services/firestore/patient_service.dart';
 import '../../../widgets/buttons/primary_button.dart';
 import '../../../widgets/common/error_message.dart';
@@ -65,7 +66,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
   }
 
   /// Verifies if a patient profile already exists for this account.
-  /// If it does, routes directly to avoid duplicate creation.
+  /// If it does, routes directly to dashboard to avoid duplicate creation.
   Future<void> _checkExistingProfile() async {
     try {
       final patientService = context.read<PatientService>();
@@ -78,9 +79,11 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
         if (!mounted) return;
 
         if (existingPatients.isNotEmpty) {
+          final patient = existingPatients.first;
+          context.read<AppStateProvider>().setCurrentPatientId(patient.patientId);
           context.go(
-            RouteNames.patientRegistrationSuccess,
-            extra: existingPatients.first,
+            RouteNames.patientDashboard,
+            extra: patient,
           );
           return;
         }
@@ -157,6 +160,10 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
       );
 
       if (!mounted) return;
+
+      context
+          .read<AppStateProvider>()
+          .setCurrentPatientId(createdPatient.patientId);
 
       context.go(RouteNames.patientLocationChoice, extra: createdPatient);
     } catch (e) {

@@ -22,11 +22,25 @@ class AppStateProvider extends ChangeNotifier {
   bool _isInitialized = false;
   bool _hasSelectedLanguage = false;
   UserRole? _selectedRole;
+  String? _currentPatientId;
 
   Locale get locale => _locale;
   bool get isInitialized => _isInitialized;
   bool get hasSelectedLanguage => _hasSelectedLanguage;
   UserRole? get selectedRole => _selectedRole;
+  String? get currentPatientId => _currentPatientId;
+
+  /// Sets the active Patient ID for the current session.
+  void setCurrentPatientId(String? patientId) {
+    _currentPatientId = patientId;
+    notifyListeners();
+  }
+
+  /// Clears the active patient session.
+  void clearPatientSession() {
+    _currentPatientId = null;
+    notifyListeners();
+  }
 
   /// Must be called before the app renders. Loads persisted locale.
   Future<void> initialize() async {
@@ -55,6 +69,9 @@ class AppStateProvider extends ChangeNotifier {
   /// Sets the currently active role.
   void selectRole(UserRole role) {
     _selectedRole = role;
+    if (role != UserRole.patient) {
+      _currentPatientId = null;
+    }
     notifyListeners();
   }
 }

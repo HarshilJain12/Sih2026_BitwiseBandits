@@ -41,4 +41,20 @@ void main() {
     provider.selectRole(UserRole.asha);
     expect(provider.selectedRole, equals(UserRole.asha));
   });
+
+  test('AppStateProvider manages active patient ID in session', () {
+    final storage = MockStorageService();
+    final provider = AppStateProvider(storageService: storage);
+    expect(provider.currentPatientId, isNull);
+
+    provider.setCurrentPatientId('P-1G9I7YHB2H');
+    expect(provider.currentPatientId, equals('P-1G9I7YHB2H'));
+
+    provider.clearPatientSession();
+    expect(provider.currentPatientId, isNull);
+
+    provider.setCurrentPatientId('P-1G9I7YHB2H');
+    provider.selectRole(UserRole.doctor);
+    expect(provider.currentPatientId, isNull);
+  });
 }

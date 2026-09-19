@@ -3,8 +3,9 @@ import 'package:healthcare_app/services/storage/medical_record_storage.dart';
 
 void main() {
   group('MedicalRecordStorage validation tests', () {
-    test('buildStoragePath constructs correct isolated path', () {
+    test('buildStoragePath constructs correct isolated path with Firebase UID root', () {
       final path = MedicalRecordStorage.buildStoragePath(
+        ownerUid: 'UID_1234567890',
         patientId: 'P-1234567890',
         recordId: 'MR-ABC123XYZ0',
         fileName: 'prescription.pdf',
@@ -12,7 +13,7 @@ void main() {
 
       expect(
         path,
-        'patients/P-1234567890/medicalRecords/MR-ABC123XYZ0/prescription.pdf',
+        'UID_1234567890/P-1234567890/MR-ABC123XYZ0/prescription.pdf',
       );
     });
 

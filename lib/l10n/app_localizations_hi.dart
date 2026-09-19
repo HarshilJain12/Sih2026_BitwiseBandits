@@ -524,7 +524,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get errorUploadFailed =>
-      'दस्तावेज़ अपलोड करने में विफल। कृपया अपना इंटरनेट कनेक्शन जांचें।';
+      'दस्तावेज़ सहेजने में विफल। कृपया पुनः प्रयास करें।';
 
   @override
   String get errorDeleteFailed =>

@@ -119,10 +119,13 @@ class MedicalRecordsPlaceholderScreen extends StatelessWidget {
 
               const Spacer(),
 
-              // ── Finish & Go to Login ─────────────────────────────────
+              // ── Finish & Go to Dashboard ──────────────────────────────
               PrimaryButton(
                 label: l10n.finishRegistration,
-                onPressed: () => context.go(RouteNames.patientLogin),
+                onPressed: () => context.go(
+                  RouteNames.patientDashboard,
+                  extra: patient,
+                ),
                 icon: Icons.check_circle_outline_rounded,
               ),
 

@@ -524,7 +524,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorUploadFailed =>
-      'Failed to upload document. Please check your internet connection and try again.';
+      'Couldn\'t save the document. Please try again.';
 
   @override
   String get errorDeleteFailed => 'Failed to delete record. Please try again.';

@@ -89,7 +89,7 @@ class _MedicalRecordUploadDialogState extends State<MedicalRecordUploadDialog> {
       }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('[MedicalRecordUploadDialog] Upload failed: $e');
+        debugPrint('[MedicalRecordUploadDialog] Upload failed (${e.runtimeType}): $e');
       }
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
@@ -107,14 +107,17 @@ class _MedicalRecordUploadDialogState extends State<MedicalRecordUploadDialog> {
 
     return PopScope(
       canPop: !_isUploading,
-      child: AlertDialog(
+      child: Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppTheme.radiusLg),
         ),
-        content: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppTheme.spacingMd),
+        child: Container(
+          width: double.infinity,
+          constraints: const BoxConstraints(maxWidth: 340),
+          padding: const EdgeInsets.all(AppTheme.spacingLg),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (_isUploading) ...[
                 const SizedBox(
@@ -147,7 +150,7 @@ class _MedicalRecordUploadDialogState extends State<MedicalRecordUploadDialog> {
               ] else ...[
                 Container(
                   padding: const EdgeInsets.all(AppTheme.spacingMd),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.errorContainer,
                     shape: BoxShape.circle,
                   ),
@@ -168,19 +171,24 @@ class _MedicalRecordUploadDialogState extends State<MedicalRecordUploadDialog> {
                 ),
                 const SizedBox(height: AppTheme.spacingLg),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(null),
-                      child: Text(l10n.cancel),
-                    ),
-                    ElevatedButton(
-                      onPressed: _performUpload,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).pop(null),
+                        child: Text(l10n.cancel),
                       ),
-                      child: Text(l10n.tryAgain),
+                    ),
+                    const SizedBox(width: AppTheme.spacingMd),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _performUpload,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(0, 48),
+                        ),
+                        child: Text(l10n.tryAgain),
+                      ),
                     ),
                   ],
                 ),

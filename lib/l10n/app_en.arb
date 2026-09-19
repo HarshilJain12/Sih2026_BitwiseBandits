@@ -350,7 +350,7 @@
   "recordDeleted": "Medical record deleted successfully",
   "errorFileSizeExceeded": "File size exceeds 10 MB limit. Please select a smaller file.",
   "errorUnsupportedFormat": "Unsupported file format. Please select PDF, JPG, or PNG.",
-  "errorUploadFailed": "Failed to upload document. Please check your internet connection and try again.",
+  "errorUploadFailed": "Couldn't save the document. Please try again.",
   "errorDeleteFailed": "Failed to delete record. Please try again.",
   "errorLoadRecordsFailed": "Could not load medical records. Pull down to refresh.",
   "errorOpenDocumentFailed": "Could not open document. Please try again.",

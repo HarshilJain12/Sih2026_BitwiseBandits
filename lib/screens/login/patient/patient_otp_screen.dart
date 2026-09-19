@@ -197,33 +197,71 @@ class _PatientOtpScreenState extends State<PatientOtpScreen> {
   }
 
   Future<void> _navigateAfterAuth(String uid, String phoneNumber) async {
-    context.read<AppStateProvider>().selectRole(UserRole.patient);
-    _ensureAccountExists();
+    final appState = context.read<AppStateProvider>();
+    appState.selectRole(UserRole.patient);
+
+    final authUser = context.read<AuthService>().currentUserId;
+    final accountService = context.read<AccountService>();
+    final patientService = context.read<PatientService>();
+    final effectiveUid = uid.isNotEmpty ? uid : (authUser ?? '');
+
+    debugPrint('════════════════ AUTH SUCCESS & IDENTITY TRACE ════════════════');
+    debugPrint('1. AUTH SUCCESS: true (currentUser != null: ${effectiveUid.isNotEmpty})');
+    debugPrint('2. CURRENT USER UID: $effectiveUid');
+    debugPrint('3. ACCOUNT LOOKUP PATH: /accounts/$effectiveUid');
 
     try {
-      final patientService = context.read<PatientService>();
-      final hasProfile = await patientService.hasPatientProfile();
+      final account = await accountService.ensureAccountExists(
+        uid: effectiveUid,
+        phoneNumber: phoneNumber,
+      );
+      debugPrint('4. ACCOUNT EXISTS: true (${account.firebaseUid})');
+    } catch (e) {
+      debugPrint('4. ACCOUNT LOOKUP/ENSURE ERROR: $e');
+    }
+
+    debugPrint('5. PATIENT LINKS LOOKUP PATH: /accounts/$effectiveUid/patientLinks');
+
+    try {
+      final linkedPatients = await patientService.getLinkedPatients(
+        uid: effectiveUid,
+      );
+      debugPrint('6. PATIENT LINKS FOUND: ${linkedPatients.length}');
+
       if (!mounted) return;
 
-      if (hasProfile) {
+      if (linkedPatients.isNotEmpty) {
+        final patient = linkedPatients.first;
+        debugPrint('7. PATIENT ID SELECTED: ${patient.patientId}');
+        debugPrint('8. PATIENT PROFILE EXISTS: true (Name: ${patient.name})');
+        debugPrint(
+          '9. FINAL NAVIGATION: EXISTING_PATIENT_DASHBOARD (${RouteNames.patientDashboard})',
+        );
+        debugPrint('══════════════════════════════════════════════════════════════');
+
+        appState.setCurrentPatientId(patient.patientId);
         context.go(
-          RouteNames.patientAuthSuccess,
-          extra: {'uid': uid, 'phoneNumber': phoneNumber},
+          RouteNames.patientDashboard,
+          extra: patient,
         );
       } else {
+        debugPrint('7. PATIENT ID SELECTED: None');
+        debugPrint('8. PATIENT PROFILE EXISTS: false');
+        debugPrint(
+          '9. FINAL NAVIGATION: NEW_PATIENT_REGISTRATION (${RouteNames.patientRegistration})',
+        );
+        debugPrint('══════════════════════════════════════════════════════════════');
+
         context.go(RouteNames.patientRegistration);
       }
     } catch (e) {
+      debugPrint('ERROR DURING PATIENT LOOKUP: $e');
+      debugPrint(
+        '9. FINAL NAVIGATION: ERROR_FALLBACK (${RouteNames.patientRegistration})',
+      );
+      debugPrint('══════════════════════════════════════════════════════════════');
       if (!mounted) return;
       context.go(RouteNames.patientRegistration);
-    }
-  }
-
-  void _ensureAccountExists() {
-    try {
-      context.read<AccountService>().ensureAccountExists();
-    } catch (e) {
-      debugPrint('[PatientOtpScreen] Failed to ensure account exists: $e');
     }
   }
 

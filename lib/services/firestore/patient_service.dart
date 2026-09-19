@@ -209,24 +209,88 @@ class PatientService {
     }
   }
 
-  /// Returns all patients linked to the currently authenticated account.
+  /// Returns all patients linked to the currently authenticated account (or specified [uid]).
   ///
-  /// Returns an empty list if no patient links exist or user is not authenticated.
-  Future<List<Patient>> getLinkedPatients() async {
+  /// Primary lookup: `/accounts/{uid}/patientLinks/{patientId}` -> `/patients/{patientId}`
+  /// Fallback/Healing: `/patients` where `ownerUid == uid` -> backfills `/accounts/{uid}/patientLinks`
+  Future<List<Patient>> getLinkedPatients({String? uid}) async {
     final user = _auth.currentUser;
-    if (user == null) return [];
+    final effectiveUid = uid ?? user?.uid;
+    if (effectiveUid == null || effectiveUid.isEmpty) return [];
 
     try {
-      final linksSnapshot = await _patientLinksRef(user.uid).get();
-
-      if (linksSnapshot.docs.isEmpty) return [];
-
+      final linksSnapshot = await _patientLinksRef(effectiveUid).get();
       final patients = <Patient>[];
-      for (final linkDoc in linksSnapshot.docs) {
-        final link = PatientLink.fromFirestore(linkDoc);
-        final patientSnapshot = await _patientsRef.doc(link.patientId).get();
-        if (patientSnapshot.exists) {
-          patients.add(Patient.fromFirestore(patientSnapshot));
+
+      if (linksSnapshot.docs.isNotEmpty) {
+        for (final linkDoc in linksSnapshot.docs) {
+          try {
+            final link = PatientLink.fromFirestore(linkDoc);
+            final patientSnapshot =
+                await _patientsRef.doc(link.patientId).get();
+            if (patientSnapshot.exists) {
+              final patient = Patient.fromFirestore(patientSnapshot);
+              if (patient.ownerUid.isEmpty ||
+                  patient.ownerUid == effectiveUid) {
+                patients.add(patient);
+              }
+            }
+          } catch (itemError) {
+            if (kDebugMode) {
+              debugPrint(
+                '[PatientService] Error loading linked patient item: $itemError',
+              );
+            }
+          }
+        }
+      }
+
+      // If links were found and loaded, return them
+      if (patients.isNotEmpty) {
+        return patients;
+      }
+
+      // ── Self-Healing Fallback ───────────────────────────────────────────
+      // If no patient links were found in subcollection, check if patient profile
+      // exists in /patients with ownerUid matching this account.
+      if (kDebugMode) {
+        debugPrint(
+          '[PatientService] No patientLinks found under /accounts/$effectiveUid. Checking /patients by ownerUid...',
+        );
+      }
+
+      final directPatientsSnapshot = await _patientsRef
+          .where('ownerUid', isEqualTo: effectiveUid)
+          .get();
+
+      if (directPatientsSnapshot.docs.isNotEmpty) {
+        for (final doc in directPatientsSnapshot.docs) {
+          try {
+            final patient = Patient.fromFirestore(doc);
+            patients.add(patient);
+
+            // Backfill the missing patientLink document
+            final link = PatientLink(
+              patientId: patient.patientId,
+              relationship: 'self',
+              createdAt: patient.createdAt,
+            );
+            await _patientLinksRef(effectiveUid)
+                .doc(patient.patientId)
+                .set(link.toFirestore(), SetOptions(merge: true));
+
+            if (kDebugMode) {
+              debugPrint(
+                '[PatientService] Healed missing patientLink for patient ${patient.patientId} under account $effectiveUid.',
+              );
+            }
+          } catch (healingError) {
+            if (kDebugMode) {
+              debugPrint(
+                '[PatientService] Error healing patientLink: $healingError',
+              );
+            }
+          }
         }
       }
 
@@ -241,14 +305,22 @@ class PatientService {
 
   /// Checks whether the current account already has at least one patient profile.
   ///
-  /// Returns `false` if the user is not authenticated.
-  Future<bool> hasPatientProfile() async {
+  /// Returns `false` if the user is not authenticated or has no profile.
+  Future<bool> hasPatientProfile({String? uid}) async {
     final user = _auth.currentUser;
-    if (user == null) return false;
+    final effectiveUid = uid ?? user?.uid;
+    if (effectiveUid == null || effectiveUid.isEmpty) return false;
 
     try {
-      final snapshot = await _patientLinksRef(user.uid).limit(1).get();
-      return snapshot.docs.isNotEmpty;
+      final snapshot = await _patientLinksRef(effectiveUid).limit(1).get();
+      if (snapshot.docs.isNotEmpty) return true;
+
+      // Fallback check directly in /patients by ownerUid
+      final patientSnapshot = await _patientsRef
+          .where('ownerUid', isEqualTo: effectiveUid)
+          .limit(1)
+          .get();
+      return patientSnapshot.docs.isNotEmpty;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('[PatientService] Error checking patient profile: $e');

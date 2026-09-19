@@ -27,18 +27,21 @@ class AccountService {
   /// Returns the [Account] after ensuring it exists.
   ///
   /// Throws [StateError] if the user is not authenticated.
-  Future<Account> ensureAccountExists() async {
+  Future<Account> ensureAccountExists({
+    String? uid,
+    String? phoneNumber,
+  }) async {
     final user = _auth.currentUser;
-    if (user == null) {
+    final effectiveUid = uid ?? user?.uid;
+    if (effectiveUid == null || effectiveUid.isEmpty) {
       throw StateError(
         'Cannot create account: no authenticated user. '
         'Ensure Firebase Phone Auth is completed before calling this method.',
       );
     }
 
-    final uid = user.uid;
-    final phoneNumber = user.phoneNumber ?? '';
-    final docRef = _accountsRef.doc(uid);
+    final effectivePhone = phoneNumber ?? user?.phoneNumber ?? '';
+    final docRef = _accountsRef.doc(effectiveUid);
 
     try {
       final snapshot = await docRef.get();
@@ -49,7 +52,7 @@ class AccountService {
 
         if (kDebugMode) {
           debugPrint(
-            '[AccountService] Account $uid already exists, updated timestamp.',
+            '[AccountService] Account $effectiveUid already exists, updated timestamp.',
           );
         }
 
@@ -60,8 +63,8 @@ class AccountService {
 
       // Create new account document
       final newAccount = Account(
-        firebaseUid: uid,
-        phoneNumber: phoneNumber,
+        firebaseUid: effectiveUid,
+        phoneNumber: effectivePhone,
         createdAt: DateTime.now(), // Will be overwritten by server timestamp
         updatedAt: DateTime.now(),
         accountType: 'patient',
@@ -71,7 +74,7 @@ class AccountService {
 
       if (kDebugMode) {
         debugPrint(
-          '[AccountService] Created new account for $uid ($phoneNumber).',
+          '[AccountService] Created new account for $effectiveUid ($effectivePhone).',
         );
       }
 

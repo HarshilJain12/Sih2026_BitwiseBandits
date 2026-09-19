@@ -142,7 +142,7 @@ class MedicalRecordSuccessScreen extends StatelessWidget {
                   label: l10n.continueButton,
                   icon: Icons.arrow_forward_rounded,
                   onPressed: () {
-                    context.go(RouteNames.patientAuthSuccess);
+                    context.go(RouteNames.patientDashboard);
                   },
                 ),
                 const SizedBox(height: AppTheme.spacingSm),

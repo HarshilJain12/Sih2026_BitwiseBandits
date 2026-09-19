@@ -19,6 +19,7 @@ class FirebaseMedicalRecordStorage implements MedicalRecordStorage {
 
   @override
   Future<StorageUploadResult> uploadBytes({
+    required String ownerUid,
     required String patientId,
     required String recordId,
     required String originalFileName,
@@ -43,6 +44,7 @@ class FirebaseMedicalRecordStorage implements MedicalRecordStorage {
     }
 
     final storagePath = MedicalRecordStorage.buildStoragePath(
+      ownerUid: ownerUid,
       patientId: patientId,
       recordId: recordId,
       fileName: originalFileName,

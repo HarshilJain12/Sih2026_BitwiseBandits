@@ -9,6 +9,7 @@ import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/hospital_result.dart';
 import '../../models/patient.dart';
+import '../../providers/app_state_provider.dart';
 import '../../services/firestore/patient_service.dart';
 import '../../services/interfaces/auth_service.dart';
 import 'widgets/emergency_help_section.dart';
@@ -38,6 +39,13 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
     if (widget.patient != null) {
       _activePatient = widget.patient;
       _isLoading = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          context
+              .read<AppStateProvider>()
+              .setCurrentPatientId(widget.patient!.patientId);
+        }
+      });
     } else {
       _loadPatientData();
     }
@@ -47,11 +55,19 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
     setState(() => _isLoading = true);
     try {
       final patientService = context.read<PatientService>();
+      final appState = context.read<AppStateProvider>();
       final linkedPatients = await patientService.getLinkedPatients();
       if (mounted) {
         setState(() {
           if (linkedPatients.isNotEmpty) {
-            _activePatient = linkedPatients.first;
+            final targetPatientId = appState.currentPatientId;
+            final matched = targetPatientId != null
+                ? linkedPatients
+                    .where((p) => p.patientId == targetPatientId)
+                    .firstOrNull
+                : null;
+            _activePatient = matched ?? linkedPatients.first;
+            appState.setCurrentPatientId(_activePatient!.patientId);
           } else {
             // Fallback default profile if no Firestore document exists yet
             _activePatient = Patient(

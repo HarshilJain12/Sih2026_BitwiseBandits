@@ -13,7 +13,7 @@ class StorageUploadResult {
     this.localFile,
   });
 
-  /// Canonical relative path: `patients/{patientId}/medicalRecords/{recordId}/{fileName}`
+  /// Canonical relative path: `{ownerUid}/{patientId}/{recordId}/{fileName}`
   final String storagePath;
 
   /// Exact file size in bytes.
@@ -22,24 +22,24 @@ class StorageUploadResult {
   /// MIME type (e.g. "application/pdf", "image/jpeg", "image/png").
   final String mimeType;
 
-  /// Storage provider identifier: `'local'` or `'firebase'`.
+  /// Storage provider identifier: `'supabase'` or `'firebase'`.
   final String storageType;
 
-  /// Optional remote download URL (for Firebase Storage).
+  /// Optional remote or signed download URL.
   final String? downloadUrl;
 
-  /// Optional local [File] handle (for Local Storage).
+  /// Optional temporary cached [File] handle (e.g. for viewer).
   final File? localFile;
 }
 
 /// Abstract storage interface for patient medical records.
 ///
 /// Decouples the UI and [MedicalRecordService] from physical storage mechanisms.
-/// Supports both:
-/// - [LocalMedicalRecordStorage] (active for SIH prototype, zero cloud costs)
-/// - [FirebaseMedicalRecordStorage] (future production migration)
+/// Supports:
+/// - [SupabaseMedicalRecordStorage] (active cloud storage in private `medical-records` bucket)
+/// - [FirebaseMedicalRecordStorage] (alternative cloud storage provider)
 abstract class MedicalRecordStorage {
-  /// Identifier of the storage provider ('local' or 'firebase').
+  /// Identifier of the storage provider ('supabase' or 'firebase').
   String get storageType;
 
   /// Maximum allowed file size in bytes: 10 MB (10,485,760 bytes).
@@ -62,14 +62,16 @@ abstract class MedicalRecordStorage {
   };
 
   /// Constructs the canonical patient-scoped storage path:
-  /// `patients/{patientId}/medicalRecords/{recordId}/{fileName}`
+  /// `{ownerUid}/{patientId}/{recordId}/{fileName}`
   static String buildStoragePath({
+    required String ownerUid,
     required String patientId,
     required String recordId,
     required String fileName,
   }) {
     final cleanFileName = sanitizeFileName(fileName);
-    return 'patients/$patientId/medicalRecords/$recordId/$cleanFileName';
+    final cleanUid = ownerUid.replaceAll(RegExp(r'[\\/:*?"<>|\x00-\x1F]'), '');
+    return '$cleanUid/$patientId/$recordId/$cleanFileName';
   }
 
   /// Sanitizes a file name by removing illegal path characters and directory traversal.
@@ -116,8 +118,9 @@ abstract class MedicalRecordStorage {
     return sizeBytes > 0 && sizeBytes <= maxFileSizeBytes;
   }
 
-  /// Stores / uploads file bytes under the given [patientId] and [recordId].
+  /// Stores / uploads file bytes under the given [ownerUid], [patientId], and [recordId].
   Future<StorageUploadResult> uploadBytes({
+    required String ownerUid,
     required String patientId,
     required String recordId,
     required String originalFileName,
@@ -125,9 +128,9 @@ abstract class MedicalRecordStorage {
     String? mimeType,
   });
 
-  /// Retrieves the stored file handle.
+  /// Retrieves the stored file handle (temporary cache if downloaded).
   ///
-  /// Returns `null` if the file does not exist locally.
+  /// Returns `null` if the file is remote and not cached.
   Future<File?> getFile(String storagePath);
 
   /// Reads raw bytes of the stored file.
@@ -141,6 +144,6 @@ abstract class MedicalRecordStorage {
   /// Checks if the file exists at [storagePath].
   Future<bool> fileExists(String storagePath);
 
-  /// Retrieves a temporary or persistent download/view URL (if supported).
+  /// Retrieves a temporary authenticated download/view URL (signed URL).
   Future<String?> getDownloadUrl(String storagePath);
 }

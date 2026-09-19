@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/route_names.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../models/patient.dart';
+import '../../../providers/app_state_provider.dart';
 import '../../../widgets/buttons/primary_button.dart';
 
 /// Screen displayed immediately after successful patient registration.
@@ -220,12 +222,10 @@ class PatientRegistrationSuccessScreen extends StatelessWidget {
                 label: l10n.continueButton,
                 icon: Icons.arrow_forward_rounded,
                 onPressed: () {
+                  context.read<AppStateProvider>().setCurrentPatientId(patient.patientId);
                   context.go(
-                    RouteNames.patientAuthSuccess,
-                    extra: {
-                      'uid': patient.ownerUid,
-                      'phoneNumber': patient.phoneNumber,
-                    },
+                    RouteNames.patientDashboard,
+                    extra: patient,
                   );
                 },
               ),
