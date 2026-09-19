@@ -38,6 +38,15 @@ USING (
   AND (storage.foldername(name))[1] = (auth.jwt() ->> 'sub')
 );
 
+-- TEMPORARY POLICY FOR MOCK DOCTORS (MVP/Demo only):
+-- Allows any authenticated user to read medical records so the mock doctor can view them.
+CREATE POLICY "Mock Doctors can read all medical records"
+ON storage.objects FOR SELECT
+TO anon, authenticated
+USING (
+  bucket_id = 'medical-records'
+);
+
 -- 5. INSERT (Upload):
 -- Can only insert objects inside their own {firebaseUid}/ directory
 CREATE POLICY "Patients can upload own medical records"

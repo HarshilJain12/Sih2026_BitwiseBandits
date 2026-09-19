@@ -21,14 +21,19 @@ service firebase.storage {
               || request.resource.contentType == 'image/png');
       }
 
-      // Read: Only the authenticated patient owner can download/view their records
-      allow read: if isPatientOwner(patientId);
+      function isDoctor() {
+        // Mock token check (would be request.auth.token.role == 'doctor' in production)
+        return request.auth != null; // TEMPORARY FOR MOCK AUTH
+      }
 
-      // Create: Only the authenticated patient owner, max 10 MB, strictly allowed MIME types
-      allow create: if isPatientOwner(patientId) && isValidDocument();
+      // Read: Authenticated patient owner or doctor can download/view records
+      allow read: if isPatientOwner(patientId) || isDoctor();
+
+      // Create: Patient owner or doctor, max 10 MB, strictly allowed MIME types
+      allow create: if (isPatientOwner(patientId) || isDoctor()) && isValidDocument();
 
       // Update: Validates BOTH file size <= 10 MB AND allowed MIME type
-      allow update: if isPatientOwner(patientId) && isValidDocument();
+      allow update: if (isPatientOwner(patientId) || isDoctor()) && isValidDocument();
 
       // Delete: Only the authenticated patient owner
       allow delete: if isPatientOwner(patientId);

@@ -66,6 +66,21 @@ class FakePatientService implements PatientService {
     final p = await getPatient(patientId);
     return (p ?? linkedPatients.first).copyWith(location: location);
   }
+
+  @override
+  Future<Patient?> getPatientById(String patientId) async {
+    return linkedPatients.where((p) => p.patientId == patientId).firstOrNull;
+  }
+
+  @override
+  Future<List<Patient>> searchPatientsByName(String query, {int limit = 20}) async {
+    final trimmed = query.trim().toLowerCase();
+    if (trimmed.isEmpty) return [];
+    return linkedPatients
+        .where((p) => p.name.toLowerCase().startsWith(trimmed))
+        .take(limit)
+        .toList();
+  }
 }
 
 class FakeMedicalRecordService implements MedicalRecordService {
@@ -185,8 +200,6 @@ void main() {
       final skipBtn = find.text('Skip for now');
       expect(skipBtn, findsOneWidget);
 
-      await tester.ensureVisible(skipBtn);
-      await tester.pumpAndSettle();
       await tester.tap(skipBtn);
       await tester.pumpAndSettle();
 

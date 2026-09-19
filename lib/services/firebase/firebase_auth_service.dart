@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
@@ -31,13 +32,64 @@ class FirebaseAuthService implements AuthService {
     required UserRole role,
     required String identifier,
     required String password,
-  }) {
-    // Preserve existing staff mock authentication
-    return _staffAuthService.loginWithPassword(
-      role: role,
-      identifier: identifier,
-      password: password,
-    );
+  }) async {
+    if (!identifier.contains('@')) {
+      // Fallback for non-email (legacy mock IDs like DOC001)
+      return _staffAuthService.loginWithPassword(
+        role: role,
+        identifier: identifier,
+        password: password,
+      );
+    }
+
+    try {
+      UserCredential userCredential;
+      try {
+        userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+          email: identifier.trim(),
+          password: password,
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
+          // Auto-create for development
+          userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+            email: identifier.trim(),
+            password: password,
+          );
+        } else {
+          rethrow;
+        }
+      }
+
+      // Save role to accounts collection so firestore.rules can recognize it
+      final uid = userCredential.user!.uid;
+      final firestore = FirebaseFirestore.instance;
+      await firestore.collection('accounts').doc(uid).set({
+        'role': role.name,
+        'email': identifier.trim(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      // Extract a nice name from email
+      final nameStr = identifier.split('@').first;
+      final niceName = 'Dr. ${nameStr[0].toUpperCase()}${nameStr.substring(1)}';
+
+      return AuthResult(
+        success: true,
+        metadata: {
+          'name': niceName,
+          'specialization': 'General Medicine',
+        },
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[FirebaseAuthService] password login failed: $e');
+      }
+      return AuthResult.failure(
+        AuthFailureReason.invalidCredentials,
+        errorKey: e.toString(),
+      );
+    }
   }
 
   @override

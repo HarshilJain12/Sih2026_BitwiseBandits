@@ -12,7 +12,6 @@
 #include <firebase_core/firebase_core_plugin_c_api.h>
 #include <firebase_storage/firebase_storage_plugin_c_api.h>
 #include <geolocator_windows/geolocator_windows.h>
-#include <speech_to_text_windows/speech_to_text_windows.h>
 #include <url_launcher_windows/url_launcher_windows.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
@@ -28,8 +27,6 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("FirebaseStoragePluginCApi"));
   GeolocatorWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("GeolocatorWindows"));
-  SpeechToTextWindowsRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("SpeechToTextWindows"));
   UrlLauncherWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("UrlLauncherWindows"));
 }

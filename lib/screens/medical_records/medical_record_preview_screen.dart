@@ -10,10 +10,8 @@ import '../../core/constants/route_names.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
-import '../../models/medical_ai_analysis.dart';
 import '../../models/medical_record_category.dart';
 import '../../services/firestore/medical_record_service.dart';
-import '../../services/firestore/patient_ai_analysis_service.dart';
 import '../../services/storage/medical_record_storage.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/buttons/secondary_button.dart';
@@ -160,21 +158,6 @@ class _MedicalRecordPreviewScreenState
     );
 
     if (createdRecord != null && mounted) {
-      // Non-blocking trigger of Gemini AI analysis
-      final aiService = context.read<PatientAiAnalysisService?>() ??
-          PatientAiAnalysisService();
-      aiService
-          .analyzeNewRecord(
-        patientId: widget.patientId,
-        record: createdRecord,
-      )
-          .catchError((e) {
-        if (kDebugMode) {
-          debugPrint('[PreviewScreen] Asynchronous AI analysis error: $e');
-        }
-        return MedicalAiAnalysis.noData(patientId: widget.patientId, ownerUid: '');
-      });
-
       context.go(
         RouteNames.medicalRecordSuccess,
         extra: {

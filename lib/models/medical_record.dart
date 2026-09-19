@@ -26,6 +26,9 @@ class MedicalRecord {
     this.status = 'uploaded',
     this.category,
     this.notes,
+    this.doctorUid,
+    this.doctorName,
+    this.doctorSpecialization,
   });
 
   /// Unique record identifier (format: `MR-XXXXXXXXXX`).
@@ -70,6 +73,18 @@ class MedicalRecord {
 
   /// Optional notes added by the user or healthcare worker.
   final String? notes;
+
+  /// Firebase UID of the doctor who created this record (null if patient-uploaded).
+  final String? doctorUid;
+
+  /// Display name of the doctor who created this record.
+  final String? doctorName;
+
+  /// Specialization of the doctor who created this record.
+  final String? doctorSpecialization;
+
+  /// Whether this record was created by a doctor.
+  bool get isDoctorRecord => doctorUid != null;
 
   /// Creates a [MedicalRecord] from a Firestore [DocumentSnapshot].
   factory MedicalRecord.fromFirestore(
@@ -124,6 +139,9 @@ class MedicalRecord {
       status: map['status'] as String? ?? 'uploaded',
       category: map['category'] as String?,
       notes: map['notes'] as String?,
+      doctorUid: map['doctorUid'] as String?,
+      doctorName: map['doctorName'] as String?,
+      doctorSpecialization: map['doctorSpecialization'] as String?,
     );
   }
 
@@ -156,6 +174,15 @@ class MedicalRecord {
     if (notes != null) {
       map['notes'] = notes;
     }
+    if (doctorUid != null) {
+      map['doctorUid'] = doctorUid;
+    }
+    if (doctorName != null) {
+      map['doctorName'] = doctorName;
+    }
+    if (doctorSpecialization != null) {
+      map['doctorSpecialization'] = doctorSpecialization;
+    }
 
     return map;
   }
@@ -185,6 +212,15 @@ class MedicalRecord {
     if (notes != null) {
       map['notes'] = notes;
     }
+    if (doctorUid != null) {
+      map['doctorUid'] = doctorUid;
+    }
+    if (doctorName != null) {
+      map['doctorName'] = doctorName;
+    }
+    if (doctorSpecialization != null) {
+      map['doctorSpecialization'] = doctorSpecialization;
+    }
 
     return map;
   }
@@ -205,6 +241,9 @@ class MedicalRecord {
     String? status,
     String? category,
     String? notes,
+    String? doctorUid,
+    String? doctorName,
+    String? doctorSpecialization,
   }) {
     return MedicalRecord(
       recordId: recordId ?? this.recordId,
@@ -221,6 +260,9 @@ class MedicalRecord {
       status: status ?? this.status,
       category: category ?? this.category,
       notes: notes ?? this.notes,
+      doctorUid: doctorUid ?? this.doctorUid,
+      doctorName: doctorName ?? this.doctorName,
+      doctorSpecialization: doctorSpecialization ?? this.doctorSpecialization,
     );
   }
 

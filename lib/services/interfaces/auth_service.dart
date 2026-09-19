@@ -21,16 +21,18 @@ class AuthResult {
     this.failureReason,
     this.uid,
     this.errorKey,
+    this.metadata,
   });
 
-  const AuthResult.success({this.uid})
+  const AuthResult.success({this.uid, this.metadata})
     : success = true,
       failureReason = null,
       errorKey = null;
 
   const AuthResult.failure(this.failureReason, {this.errorKey})
     : success = false,
-      uid = null;
+      uid = null,
+      metadata = null;
 
   final bool success;
   final AuthFailureReason? failureReason;
@@ -38,6 +40,9 @@ class AuthResult {
 
   /// Optional localization/error key for backward compatibility with earlier UI code.
   final String? errorKey;
+
+  /// Optional metadata map for passing extra info (e.g. doctor name, specialization).
+  final Map<String, dynamic>? metadata;
 
   static const AuthResult ok = AuthResult.success();
 

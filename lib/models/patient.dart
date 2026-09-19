@@ -24,6 +24,10 @@ class Patient {
     required this.createdAt,
     required this.updatedAt,
     this.status = 'active',
+    this.healthTags = const [],
+    this.qrToken,
+    this.qrVersion,
+    this.qrCodeBase64,
   });
 
   /// Human-readable unique identifier in format `P-XXXXXXXXXX`.
@@ -58,6 +62,21 @@ class Patient {
   /// Future phases may add: `"inactive"`, `"transferred"`, etc.
   final String status;
 
+  /// Explicit clinical health tags assigned by healthcare workers.
+  /// Examples: `['Diabetic', 'Hypertension', 'Pregnant']`.
+  /// Tags must come from stored data — never inferred or auto-generated.
+  final List<String> healthTags;
+
+  /// Opaque QR token linked to this patient for secure QR identification.
+  /// Format: `QRT-XXXXXXXXXXXXXXXX`. Stored in `/patientQrCodes/{qrToken}`.
+  final String? qrToken;
+
+  /// QR payload version for forward compatibility. Currently `1`.
+  final int? qrVersion;
+
+  /// Base64 string of the static QR code image generated at registration.
+  final String? qrCodeBase64;
+
   /// Creates a [Patient] from a Firestore document snapshot.
   /// Handles missing or legacy fields safely for backward compatibility.
   factory Patient.fromFirestore(
@@ -72,6 +91,14 @@ class Patient {
       );
     }
 
+    // Parse healthTags safely from Firestore list
+    List<String> parsedTags = const [];
+    if (data['healthTags'] is List) {
+      parsedTags = (data['healthTags'] as List)
+          .whereType<String>()
+          .toList();
+    }
+
     return Patient(
       patientId: data['patientId'] as String? ?? snapshot.id,
       ownerUid: data['ownerUid'] as String? ?? '',
@@ -84,6 +111,10 @@ class Patient {
       createdAt: _parseTimestamp(data['createdAt']),
       updatedAt: _parseTimestamp(data['updatedAt']),
       status: data['status'] as String? ?? 'active',
+      healthTags: parsedTags,
+      qrToken: data['qrToken'] as String?,
+      qrVersion: (data['qrVersion'] as num?)?.toInt(),
+      qrCodeBase64: data['qrCodeBase64'] as String?,
     );
   }
 
@@ -118,6 +149,18 @@ class Patient {
     if (location != null) {
       map['location'] = location!.toMap();
     }
+    if (healthTags.isNotEmpty) {
+      map['healthTags'] = healthTags;
+    }
+    if (qrToken != null) {
+      map['qrToken'] = qrToken;
+    }
+    if (qrVersion != null) {
+      map['qrVersion'] = qrVersion;
+    }
+    if (qrCodeBase64 != null) {
+      map['qrCodeBase64'] = qrCodeBase64;
+    }
 
     return map;
   }
@@ -135,6 +178,10 @@ class Patient {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? status,
+    List<String>? healthTags,
+    String? qrToken,
+    int? qrVersion,
+    String? qrCodeBase64,
   }) {
     return Patient(
       patientId: patientId ?? this.patientId,
@@ -148,6 +195,10 @@ class Patient {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       status: status ?? this.status,
+      healthTags: healthTags ?? this.healthTags,
+      qrToken: qrToken ?? this.qrToken,
+      qrVersion: qrVersion ?? this.qrVersion,
+      qrCodeBase64: qrCodeBase64 ?? this.qrCodeBase64,
     );
   }
 

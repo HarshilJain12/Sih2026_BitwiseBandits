@@ -10,6 +10,7 @@ import '../services/interfaces/storage_service.dart';
 /// Currently manages:
 /// - Selected locale (persisted via [StorageService])
 /// - Active/selected user role
+/// - Doctor session data
 ///
 /// Architecture note: future chunks can add [AuthProvider] and
 /// [UserProvider] as separate providers rather than expanding this class.
@@ -24,11 +25,25 @@ class AppStateProvider extends ChangeNotifier {
   UserRole? _selectedRole;
   String? _currentPatientId;
 
+  // Doctor session fields
+  String? _activeDoctorId;
+  String? _activeDoctorName;
+  String? _activeDoctorSpecialization;
+
   Locale get locale => _locale;
   bool get isInitialized => _isInitialized;
   bool get hasSelectedLanguage => _hasSelectedLanguage;
   UserRole? get selectedRole => _selectedRole;
   String? get currentPatientId => _currentPatientId;
+
+  /// Doctor session accessors.
+  String? get activeDoctorId => _activeDoctorId;
+  String? get activeDoctorName => _activeDoctorName;
+  String? get activeDoctorSpecialization => _activeDoctorSpecialization;
+
+  /// Whether the current session is an authenticated doctor.
+  bool get isDoctorSession =>
+      _selectedRole == UserRole.doctor && _activeDoctorId != null;
 
   /// Sets the active Patient ID for the current session.
   void setCurrentPatientId(String? patientId) {
@@ -39,6 +54,30 @@ class AppStateProvider extends ChangeNotifier {
   /// Clears the active patient session.
   void clearPatientSession() {
     _currentPatientId = null;
+    notifyListeners();
+  }
+
+  /// Sets the doctor session data after successful login.
+  void setDoctorSession({
+    required String doctorId,
+    required String name,
+    required String specialization,
+  }) {
+    _activeDoctorId = doctorId;
+    _activeDoctorName = name;
+    _activeDoctorSpecialization = specialization;
+    _selectedRole = UserRole.doctor;
+    notifyListeners();
+  }
+
+  /// Clears the doctor session data on logout.
+  void clearDoctorSession() {
+    _activeDoctorId = null;
+    _activeDoctorName = null;
+    _activeDoctorSpecialization = null;
+    if (_selectedRole == UserRole.doctor) {
+      _selectedRole = null;
+    }
     notifyListeners();
   }
 

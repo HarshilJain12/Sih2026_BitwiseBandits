@@ -41,4 +41,12 @@ class RouteNames {
       '/patient/medical-records/preview';
   static const String medicalRecordSuccess =
       '/patient/medical-records/success';
+
+  // Patient QR Display
+  static const String patientQrDisplay = '/patient/qr-code';
+
+  // Doctor Dashboard routes
+  static const String doctorDashboard = '/doctor/dashboard';
+  static const String doctorQrScanner = '/doctor/scan-qr';
+  static const String doctorPatientRecord = '/doctor/patient-record';
 }
