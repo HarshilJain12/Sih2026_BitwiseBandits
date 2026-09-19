@@ -15,10 +15,17 @@ service cloud.firestore {
 
     // ── Patients ──────────────────────────────────────────────────────────────
     // Only the ownerUid can read/update their own patient records.
-    // TODO: Future phases will add role-based access for ASHA, Doctor, Hospital Admin.
+    // Doctors can read patient profiles.
     match /patients/{patientId} {
+      function isDoctor() {
+        return request.auth != null && (
+          request.auth.uid.matches('mock_staff_doctor_.*') ||
+          (request.auth.token.email != null && request.auth.token.email.matches('.*doctor.*'))
+        );
+      }
+
       allow read: if request.auth != null
-                  && resource.data.ownerUid == request.auth.uid;
+                  && (resource.data.ownerUid == request.auth.uid || isDoctor());
       allow create: if request.auth != null
                     && request.resource.data.ownerUid == request.auth.uid;
       allow update: if request.auth != null
@@ -34,14 +41,45 @@ service cloud.firestore {
             get(/databases/$(database)/documents/patients/$(patientId)).data.ownerUid == request.auth.uid;
         }
 
-        allow read: if isPatientOwner();
-        allow create: if isPatientOwner()
-                      && request.resource.data.ownerUid == request.auth.uid
-                      && request.resource.data.patientId == patientId;
-        allow update: if isPatientOwner()
-                      && request.resource.data.ownerUid == request.auth.uid;
+        allow read: if isPatientOwner() || isDoctor();
+        allow create: if (isPatientOwner() && request.resource.data.ownerUid == request.auth.uid && request.resource.data.patientId == patientId)
+                      || (isDoctor() && request.resource.data.patientId == patientId);
+        allow update: if (isPatientOwner() && request.resource.data.ownerUid == request.auth.uid) || isDoctor();
         allow delete: if isPatientOwner();
       }
+
+      // ── AI Medical Analysis Subcollection ───────────────────────────────
+      // Patient owner and authorized doctors can read AI summaries.
+      // Only the authenticated patient owner or doctor can create/update analysis.
+      match /aiAnalysis/{docId} {
+        function isPatientOwner() {
+          return request.auth != null &&
+            get(/databases/$(database)/documents/patients/$(patientId)).data.ownerUid == request.auth.uid;
+        }
+
+        allow read: if isPatientOwner() || isDoctor();
+        allow create, update: if (isPatientOwner() && request.resource.data.ownerUid == request.auth.uid && request.resource.data.patientId == patientId)
+                              || (isDoctor() && request.resource.data.patientId == patientId);
+        allow delete: if isPatientOwner();
+      }
+    }
+
+    // ── Appointments ──────────────────────────────────────────────────────────
+    match /appointments/{appointmentId} {
+      function isDoctor() {
+        return request.auth != null && (
+          request.auth.uid.matches('mock_staff_doctor_.*') ||
+          (request.auth.token.email != null && request.auth.token.email.matches('.*doctor.*'))
+        );
+      }
+      // Only doctors can manage appointments for now
+      allow read, write: if isDoctor();
+    }
+
+    // ── Patient QR Codes ──────────────────────────────────────────────────────
+    match /patientQrCodes/{token} {
+      // Patients need to generate their own QR codes, Doctors need to read them to verify
+      allow read, write: if request.auth != null;
     }
 
     // ── Default Deny ──────────────────────────────────────────────────────────

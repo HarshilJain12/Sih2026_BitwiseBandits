@@ -4,7 +4,7 @@
 class ApiConfig {
   ApiConfig._();
 
-  /// Google Gemini API Key for healthcare intent classification.
+  /// Google Gemini API Key for healthcare intent classification & document analysis.
   /// Pass via `--dart-define=GEMINI_API_KEY=your_key_here`.
   static const String geminiApiKey = String.fromEnvironment(
     'GEMINI_API_KEY',

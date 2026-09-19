@@ -12,6 +12,7 @@ import '../../models/patient.dart';
 import '../../providers/app_state_provider.dart';
 import '../../services/firestore/patient_service.dart';
 import '../../services/interfaces/auth_service.dart';
+import 'widgets/ai_health_summary_widget.dart';
 import 'widgets/emergency_help_section.dart';
 import 'widgets/find_hospital_section.dart';
 import 'widgets/follow_up_section.dart';
@@ -304,6 +305,10 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
+          ),
+          const SizedBox(height: AppTheme.spacingMd),
+          AiHealthSummaryWidget(
+            patientId: patient.patientId,
           ),
           const SizedBox(height: AppTheme.spacingLg),
           Card(

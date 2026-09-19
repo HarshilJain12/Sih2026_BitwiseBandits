@@ -9,6 +9,8 @@ import '../../l10n/app_localizations.dart';
 import '../../models/medical_record.dart';
 import '../../models/patient.dart';
 import '../../services/firestore/medical_record_service.dart';
+import '../../services/firestore/patient_ai_analysis_service.dart';
+import '../patient_dashboard/widgets/ai_health_summary_widget.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/buttons/secondary_button.dart';
 import 'widgets/delete_record_dialog.dart';
@@ -61,6 +63,9 @@ class _PatientMedicalRecordsScreenState
           _records = records;
           _isLoading = false;
         });
+
+        // Non-blocking trigger: analyze any unprocessed/new records in the background
+        PatientAiAnalysisService.instance.analyzePatientRecords(widget.patientId).ignore();
       }
     } catch (e) {
       if (mounted) {
@@ -101,6 +106,13 @@ class _PatientMedicalRecordsScreenState
           behavior: SnackBarBehavior.floating,
         ),
       );
+      // Sync deletion in AI Analysis
+      PatientAiAnalysisService.instance
+          .handleRecordDeletion(
+            patientId: widget.patientId,
+            deletedRecordId: record.recordId,
+          )
+          .ignore();
       _loadRecords();
     }
   }
@@ -178,6 +190,12 @@ class _PatientMedicalRecordsScreenState
                         ),
                         const SizedBox(height: AppTheme.spacingMd),
                       ],
+
+                      // ── AI Health Summary Widget ────────────────────────
+                      AiHealthSummaryWidget(
+                        patientId: widget.patientId,
+                      ),
+                      const SizedBox(height: AppTheme.spacingMd),
 
                       // ── Error Banner ────────────────────────────────────
                       if (_errorMessage != null) ...[
