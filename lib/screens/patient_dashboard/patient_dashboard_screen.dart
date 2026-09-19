@@ -110,14 +110,19 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
     }
   }
 
-  void _onOpenMap(HospitalResult selected, List<HospitalResult> allResults) {
+  void _onOpenMap(
+    HospitalResult selected,
+    List<HospitalResult> allResults, {
+    double? userLat,
+    double? userLng,
+  }) {
     context.push(
       RouteNames.hospitalMap,
       extra: {
         'selectedHospital': selected,
         'allHospitals': allResults,
-        'userLat': _activePatient?.location?.latitude,
-        'userLng': _activePatient?.location?.longitude,
+        'userLat': userLat,
+        'userLng': userLng,
       },
     );
   }
@@ -256,8 +261,14 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
 
           // ── 2. Find the Hospital Section ──────────────────────────────
           FindHospitalSection(
-            patientLocation: patient.location,
-            onOpenMap: _onOpenMap,
+            onOpenMap: (selected, allResults, userLat, userLng) {
+              _onOpenMap(
+                selected,
+                allResults,
+                userLat: userLat,
+                userLng: userLng,
+              );
+            },
             onGetDirections: _onGetDirections,
           ),
 
