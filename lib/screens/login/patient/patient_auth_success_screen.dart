@@ -233,15 +233,20 @@ class _PatientAuthSuccessScreenState extends State<PatientAuthSuccessScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        '${l10n.fullName}: ${patient.name}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                      Expanded(
+                                        child: Text(
+                                          '${l10n.fullName}: ${patient.name}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
+                                      const SizedBox(width: AppTheme.spacingSm),
                                       Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: AppTheme.spacingSm,

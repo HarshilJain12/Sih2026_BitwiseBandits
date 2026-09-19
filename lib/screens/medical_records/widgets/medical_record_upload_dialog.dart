@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
@@ -93,9 +94,24 @@ class _MedicalRecordUploadDialogState extends State<MedicalRecordUploadDialog> {
       }
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
+        String message = l10n.errorUploadFailed;
+
+        if (e is StorageException) {
+          final errorLower = '${e.message} ${e.error ?? ''}'.toLowerCase();
+          if (e.statusCode == '403' || errorLower.contains('policy') || errorLower.contains('unauthorized')) {
+            message = 'Storage permission pending. Please ensure your account has active storage authorization or retry shortly.';
+          } else if (e.message.isNotEmpty) {
+            message = e.message;
+          }
+        } else if (e is ArgumentError) {
+          message = e.message.toString();
+        } else if (e is StateError) {
+          message = e.message;
+        }
+
         setState(() {
           _isUploading = false;
-          _errorMessage = l10n.errorUploadFailed;
+          _errorMessage = message;
         });
       }
     }
