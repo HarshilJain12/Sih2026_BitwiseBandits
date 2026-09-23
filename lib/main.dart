@@ -27,6 +27,8 @@ import 'services/mock/mock_storage_service.dart';
 import 'services/storage/medical_record_storage.dart';
 import 'services/storage/supabase_medical_record_storage.dart';
 import 'services/firestore/asha_data_service.dart';
+import 'services/firestore/hospital_admin_service.dart';
+import 'providers/admin_state_provider.dart';
 import 'providers/asha_state_provider.dart';
 
 void main() async {
@@ -51,8 +53,13 @@ void main() async {
   final ashaDataService = AshaDataService();
   final patientQrService = PatientQrService();
   final appointmentService = AppointmentService();
+  final hospitalAdminService = HospitalAdminService(
+    ashaDataService: ashaDataService,
+  );
   final appState = AppStateProvider(storageService: storageService);
   final ashaState = AshaStateProvider(dataService: ashaDataService);
+  final adminState =
+      AdminStateProvider(dataService: hospitalAdminService);
 
   await appState.initialize();
 
@@ -67,10 +74,12 @@ void main() async {
         Provider<MedicalRecordStorage>.value(value: medicalRecordStorage),
         Provider<MedicalRecordService>.value(value: medicalRecordService),
         Provider<AshaDataService>.value(value: ashaDataService),
+        Provider<HospitalAdminService>.value(value: hospitalAdminService),
         Provider<PatientQrService>.value(value: patientQrService),
         Provider<AppointmentService>.value(value: appointmentService),
         ChangeNotifierProvider<AppStateProvider>.value(value: appState),
         ChangeNotifierProvider<AshaStateProvider>.value(value: ashaState),
+        ChangeNotifierProvider<AdminStateProvider>.value(value: adminState),
       ],
       child: const HealthcareApp(),
     ),

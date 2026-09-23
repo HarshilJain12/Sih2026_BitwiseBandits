@@ -60,6 +60,7 @@ class RouteNames {
   // Hospital Admin - Community Health Alerts
   static const String adminCommunityAlerts = '/admin/community-alerts';
   static const String adminCreateAwareness = '/admin/create-awareness';
+  static const String adminDashboard = '/admin/dashboard';
 
   // Patient - Health Awareness
   static const String patientAwareness = '/patient/awareness';

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/route_names.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/validators.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../models/user_role.dart';
+import '../../../providers/admin_state_provider.dart';
 import '../../../providers/app_state_provider.dart';
 import '../../../services/interfaces/auth_service.dart';
 import '../../../widgets/buttons/primary_button.dart';
@@ -78,38 +81,36 @@ class _HospitalAdminLoginScreenState extends State<HospitalAdminLoginScreen> {
     setState(() => _isLoading = false);
 
     if (result.success) {
+      final adminProvider = context.read<AdminStateProvider>();
       context.read<AppStateProvider>().selectRole(UserRole.hospitalAdmin);
-
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-          ),
-          icon: const Icon(
-            Icons.check_circle_rounded,
-            color: AppColors.success,
-            size: 48,
-          ),
-          title: Text(l10n.login),
-          content: Text(
-            '${l10n.roleHospitalAdmin} — ${_idController.text.trim()}\n\nAuthentication successful! Hospital Admin dashboard will be available in later chunks.',
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                Navigator.of(context).pop();
-              },
-              child: Text(l10n.back),
-            ),
-          ],
-        ),
-      );
+      await adminProvider.loadAll();
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      context.go(RouteNames.adminDashboard);
     } else {
       setState(() => _errorMessage = l10n.errorInvalidCredentials);
+    }
+  }
+
+  Future<void> _onDemoLogin() async {
+    setState(() => _isLoading = true);
+    try {
+      final adminProvider = context.read<AdminStateProvider>();
+      context.read<AppStateProvider>().selectRole(UserRole.hospitalAdmin);
+      await adminProvider.loadAll();
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      context.go(RouteNames.adminDashboard);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Demo mode failed: $e'),
+          backgroundColor: AppColors.error,
+          duration: const Duration(seconds: 6),
+        ),
+      );
     }
   }
 
@@ -225,6 +226,31 @@ class _HospitalAdminLoginScreenState extends State<HospitalAdminLoginScreen> {
                 onPressed: _onLogin,
                 isLoading: _isLoading,
                 icon: Icons.login_rounded,
+              ),
+
+              const SizedBox(height: AppTheme.spacingMd),
+
+              // ── Quick Demo Mode Button ──────────────────────────────
+              OutlinedButton.icon(
+                onPressed: _isLoading ? null : _onDemoLogin,
+                icon: const Icon(Icons.flash_on_rounded,
+                    color: AppColors.roleAdmin),
+                label: const Text(
+                  '⚡ One-Click Demo Mode (ADMIN001)',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.roleAdmin,
+                    fontSize: 15,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side:
+                      const BorderSide(color: AppColors.roleAdmin, width: 1.5),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                  ),
+                ),
               ),
             ],
           ),

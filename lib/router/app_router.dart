@@ -32,6 +32,7 @@ import '../screens/maternal/asha_maternal_screen.dart';
 import '../screens/follow_ups/asha_follow_ups_screen.dart';
 import '../screens/placeholders/asha_placeholders.dart';
 import '../screens/alerts/asha_awareness_screen.dart';
+import '../screens/admin_dashboard/admin_dashboard_screen.dart';
 import '../screens/alerts/admin_community_alerts_screen.dart';
 import '../screens/alerts/admin_create_awareness_screen.dart';
 import '../screens/alerts/patient_awareness_screen.dart';
@@ -151,6 +152,12 @@ class AppRouter {
         GoRoute(
           path: RouteNames.hospitalAdminLogin,
           builder: (context, state) => const HospitalAdminLoginScreen(),
+        ),
+
+        // Hospital Admin Dashboard
+        GoRoute(
+          path: RouteNames.adminDashboard,
+          builder: (context, state) => const AdminDashboardScreen(),
         ),
 
         // Registration - Role Selection
