@@ -19,7 +19,7 @@ class MockSpeechInputService implements SpeechInputService {
   Future<bool> isAvailable() async => true;
 
   @override
-  Future<String?> listenForSpeech() async {
+  Future<String?> listenForSpeech({String lang = 'en-IN'}) async {
     // Simulate listening delay
     await Future.delayed(const Duration(milliseconds: 1200));
     final index = _random.nextInt(_sampleVoiceInputs.length);

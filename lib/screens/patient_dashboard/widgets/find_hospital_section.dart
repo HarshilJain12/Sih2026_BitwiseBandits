@@ -7,7 +7,7 @@ import '../../../models/hospital_result.dart';
 import '../../../models/patient_location.dart';
 import '../../../services/hospital/hospital_search_service.dart';
 import '../../../services/hospital/mock_hospital_search_service.dart';
-import '../../../services/speech/mock_speech_input_service.dart';
+import '../../../services/speech/real_speech_input_service.dart';
 import '../../../services/speech/speech_input_service.dart';
 import 'hospital_result_card.dart';
 
@@ -54,7 +54,7 @@ class _FindHospitalSectionState extends State<FindHospitalSection> {
   void initState() {
     super.initState();
     _searchService = widget.searchService ?? MockHospitalSearchService();
-    _speechService = widget.speechService ?? MockSpeechInputService();
+    _speechService = widget.speechService ?? RealSpeechInputService();
     _performSearch('');
   }
 

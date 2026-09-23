@@ -75,7 +75,7 @@ class AppTypography {
       labelLarge: base.labelLarge?.copyWith(
         fontSize: 16,
         fontWeight: FontWeight.w600,
-        color: AppColors.textOnPrimary,
+        color: AppColors.textPrimary,
         letterSpacing: 0.3,
       ),
       labelMedium: base.labelMedium?.copyWith(

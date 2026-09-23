@@ -18,6 +18,22 @@ import '../screens/login/hospital_admin/hospital_admin_login_screen.dart';
 import '../screens/login/patient/patient_auth_success_screen.dart';
 import '../screens/login/patient/patient_login_screen.dart';
 import '../screens/login/patient/patient_otp_screen.dart';
+import '../screens/registration/asha/asha_registration_screen.dart';
+import '../screens/asha_dashboard/asha_dashboard_screen.dart';
+import '../screens/family/asha_family_registration_screen.dart';
+import '../screens/home_visit/asha_home_visit_screen.dart';
+import '../screens/home_visit/asha_health_survey_screen.dart';
+import '../screens/alerts/asha_report_issue_screen.dart';
+import '../screens/vaccination/asha_vaccination_screen.dart';
+import '../screens/maternal/asha_maternal_screen.dart';
+import '../screens/follow_ups/asha_follow_ups_screen.dart';
+import '../screens/placeholders/asha_placeholders.dart';
+import '../screens/alerts/asha_awareness_screen.dart';
+import '../screens/alerts/admin_community_alerts_screen.dart';
+import '../screens/alerts/admin_create_awareness_screen.dart';
+import '../screens/alerts/patient_awareness_screen.dart';
+import '../models/family.dart';
+import '../models/community_health_alert.dart';
 import '../screens/medical_records/add_medical_record_category_screen.dart';
 import '../screens/medical_records/medical_record_preview_screen.dart';
 import '../screens/medical_records/medical_record_success_screen.dart';
@@ -327,6 +343,82 @@ class AppRouter {
               userLng: userLng,
             );
           },
+        ),
+
+        // ASHA Routes
+        GoRoute(
+          path: RouteNames.ashaRegister,
+          builder: (context, state) => const AshaRegistrationScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.ashaDashboard,
+          builder: (context, state) => const AshaDashboardScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.ashaFamilyRegistration,
+          builder: (context, state) => const AshaFamilyRegistrationScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.ashaHomeVisit,
+          builder: (context, state) => const AshaHomeVisitScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.ashaHealthSurvey,
+          builder: (context, state) {
+            final family = state.extra as Family;
+            return AshaHealthSurveyScreen(family: family);
+          },
+        ),
+        GoRoute(
+          path: RouteNames.ashaReportIssue,
+          builder: (context, state) => const AshaReportIssueScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.ashaVaccination,
+          builder: (context, state) => const AshaVaccinationScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.ashaMaternal,
+          builder: (context, state) => const AshaMaternalScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.ashaFollowUps,
+          builder: (context, state) => const AshaFollowUpsScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.ashaInfantCare,
+          builder: (context, state) => const AshaInfantCareScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.ashaVisitHistory,
+          builder: (context, state) => const AshaVisitHistoryScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.ashaProfile,
+          builder: (context, state) => const AshaProfileScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.ashaAwareness,
+          builder: (context, state) => const AshaAwarenessScreen(),
+        ),
+
+        // Admin Routes
+        GoRoute(
+          path: RouteNames.adminCommunityAlerts,
+          builder: (context, state) => const AdminCommunityAlertsScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.adminCreateAwareness,
+          builder: (context, state) {
+            final alert = state.extra as CommunityHealthAlert?;
+            return AdminCreateAwarenessScreen(alert: alert);
+          },
+        ),
+
+        // Patient Awareness Route
+        GoRoute(
+          path: RouteNames.patientAwareness,
+          builder: (context, state) => const PatientAwarenessScreen(),
         ),
       ],
     );

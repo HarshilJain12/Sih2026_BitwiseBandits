@@ -19,6 +19,8 @@ import 'services/interfaces/storage_service.dart';
 import 'services/mock/mock_storage_service.dart';
 import 'services/storage/medical_record_storage.dart';
 import 'services/storage/supabase_medical_record_storage.dart';
+import 'services/firestore/asha_data_service.dart';
+import 'providers/asha_state_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +38,9 @@ void main() async {
   final patientService = PatientService();
   final medicalRecordStorage = SupabaseMedicalRecordStorage();
   final medicalRecordService = MedicalRecordService(storage: medicalRecordStorage);
+  final ashaDataService = AshaDataService();
   final appState = AppStateProvider(storageService: storageService);
+  final ashaState = AshaStateProvider(dataService: ashaDataService);
 
   await appState.initialize();
 
@@ -50,7 +54,9 @@ void main() async {
         Provider<PatientService>.value(value: patientService),
         Provider<MedicalRecordStorage>.value(value: medicalRecordStorage),
         Provider<MedicalRecordService>.value(value: medicalRecordService),
+        Provider<AshaDataService>.value(value: ashaDataService),
         ChangeNotifierProvider<AppStateProvider>.value(value: appState),
+        ChangeNotifierProvider<AshaStateProvider>.value(value: ashaState),
       ],
       child: const HealthcareApp(),
     ),

@@ -107,6 +107,8 @@ class RegistrationRoleSelectionScreen extends StatelessWidget {
                                 onTap: () {
                                   if (r.role == UserRole.patient) {
                                     context.push(RouteNames.patientLogin);
+                                  } else if (r.role == UserRole.asha) {
+                                    context.push(RouteNames.ashaRegister);
                                   } else {
                                     context.push(
                                       RouteNames.registrationPlaceholder,
@@ -135,6 +137,8 @@ class RegistrationRoleSelectionScreen extends StatelessWidget {
                               onTap: () {
                                 if (r.role == UserRole.patient) {
                                   context.push(RouteNames.patientLogin);
+                                } else if (r.role == UserRole.asha) {
+                                  context.push(RouteNames.ashaRegister);
                                 } else {
                                   context.push(
                                     RouteNames.registrationPlaceholder,

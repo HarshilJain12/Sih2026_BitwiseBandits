@@ -41,6 +41,73 @@
     For more details:
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
+  <script>
+    let activeRecognition = null;
+
+    window.isSpeechRecognitionAvailable = function() {
+      return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+    };
+
+    window.startSpeechRecognition = function(lang) {
+      return new Promise((resolve, reject) => {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) {
+          reject('Speech recognition is not supported in this browser. Please use Google Chrome or Microsoft Edge.');
+          return;
+        }
+
+        if (activeRecognition) {
+          try { activeRecognition.abort(); } catch(e) {}
+        }
+
+        const recognition = new SpeechRec();
+        activeRecognition = recognition;
+        recognition.lang = lang || 'en-IN';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        let finalResult = '';
+
+        recognition.onresult = (event) => {
+          if (event.results && event.results.length > 0) {
+            finalResult = event.results[0][0].transcript;
+          }
+        };
+
+        recognition.onerror = (event) => {
+          activeRecognition = null;
+          console.warn('Speech recognition error:', event.error);
+          if (event.error === 'not-allowed') {
+            reject('Microphone permission denied. Please enable microphone access in your browser settings.');
+          } else if (event.error === 'no-speech') {
+            resolve('');
+          } else {
+            reject('Voice recognition error: ' + event.error);
+          }
+        };
+
+        recognition.onend = () => {
+          activeRecognition = null;
+          resolve(finalResult);
+        };
+
+        try {
+          recognition.start();
+        } catch(err) {
+          activeRecognition = null;
+          reject(err.toString());
+        }
+      });
+    };
+
+    window.stopSpeechRecognition = function() {
+      if (activeRecognition) {
+        try {
+          activeRecognition.stop();
+        } catch(e) {}
+      }
+    };
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

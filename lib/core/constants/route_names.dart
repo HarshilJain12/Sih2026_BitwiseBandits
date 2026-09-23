@@ -41,4 +41,26 @@ class RouteNames {
       '/patient/medical-records/preview';
   static const String medicalRecordSuccess =
       '/patient/medical-records/success';
+
+  // ASHA Worker routes
+  static const String ashaRegister = '/register/asha';
+  static const String ashaDashboard = '/asha/dashboard';
+  static const String ashaFamilyRegistration = '/asha/family/register';
+  static const String ashaHomeVisit = '/asha/visit';
+  static const String ashaHealthSurvey = '/asha/visit/survey';
+  static const String ashaVisitHistory = '/asha/visits/history';
+  static const String ashaVaccination = '/asha/vaccination';
+  static const String ashaMaternal = '/asha/maternal';
+  static const String ashaInfantCare = '/asha/infant-care';
+  static const String ashaReportIssue = '/asha/report-issue';
+  static const String ashaAwareness = '/asha/awareness';
+  static const String ashaFollowUps = '/asha/follow-ups';
+  static const String ashaProfile = '/asha/profile';
+
+  // Hospital Admin - Community Health Alerts
+  static const String adminCommunityAlerts = '/admin/community-alerts';
+  static const String adminCreateAwareness = '/admin/create-awareness';
+
+  // Patient - Health Awareness
+  static const String patientAwareness = '/patient/awareness';
 }

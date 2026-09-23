@@ -70,7 +70,11 @@ class AppTheme {
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.textOnPrimary,
           elevation: buttonElevation,
-          minimumSize: const Size(double.infinity, buttonHeight),
+          // NOTE: must stay finite — an infinite min width breaks every
+          // button placed in an unbounded row (e.g. ListTile.trailing).
+          // Full-width CTAs get their width from PrimaryButton's own
+          // SizedBox, not from here.
+          minimumSize: const Size(64, buttonHeight),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusMd),
           ),
@@ -82,7 +86,8 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.primary,
           side: const BorderSide(color: AppColors.primary, width: 1.5),
-          minimumSize: const Size(double.infinity, buttonHeight),
+          // Same as above: keep finite so inline outlined buttons work.
+          minimumSize: const Size(64, buttonHeight),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusMd),
           ),
@@ -129,15 +134,47 @@ class AppTheme {
           borderRadius: BorderRadius.circular(radiusMd),
           borderSide: const BorderSide(color: AppColors.error, width: 2),
         ),
-        labelStyle: AppTypography.textTheme.bodyMedium,
+        labelStyle: AppTypography.textTheme.bodyMedium?.copyWith(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w500,
+        ),
+        floatingLabelStyle: AppTypography.textTheme.bodyMedium?.copyWith(
+          color: AppColors.primary,
+          fontWeight: FontWeight.w600,
+        ),
         hintStyle: AppTypography.textTheme.bodyMedium?.copyWith(
           color: AppColors.textHint,
         ),
         errorStyle: AppTypography.textTheme.bodySmall?.copyWith(
           color: AppColors.error,
         ),
-        prefixIconColor: AppColors.textSecondary,
-        suffixIconColor: AppColors.textSecondary,
+        prefixIconColor: AppColors.textPrimary,
+        suffixIconColor: AppColors.textPrimary,
+      ),
+      // ── Chip Theme ────────────────────────────────────────────────────────
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.surface,
+        selectedColor: AppColors.primary,
+        disabledColor: AppColors.background,
+        labelStyle: AppTypography.textTheme.bodyMedium?.copyWith(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w500,
+        ),
+        secondaryLabelStyle: AppTypography.textTheme.bodyMedium?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radiusMd),
+          side: const BorderSide(color: AppColors.border),
+        ),
+      ),
+      // ── Dropdown Menu Theme ───────────────────────────────────────────────
+      dropdownMenuTheme: DropdownMenuThemeData(
+        textStyle: AppTypography.textTheme.bodyLarge?.copyWith(
+          color: AppColors.textPrimary,
+        ),
       ),
       // ── Card ─────────────────────────────────────────────────────────────
       cardTheme: CardThemeData(

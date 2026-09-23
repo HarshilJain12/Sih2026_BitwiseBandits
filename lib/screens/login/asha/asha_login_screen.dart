@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/route_names.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/validators.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../models/asha_worker.dart';
 import '../../../models/user_role.dart';
 import '../../../providers/app_state_provider.dart';
-import '../../../services/interfaces/auth_service.dart';
+import '../../../providers/asha_state_provider.dart';
 import '../../../widgets/buttons/primary_button.dart';
 import '../../../widgets/common/error_message.dart';
 import '../../../widgets/inputs/app_text_field.dart';
@@ -66,47 +69,18 @@ class _AshaLoginScreenState extends State<AshaLoginScreen> {
       _isLoading = true;
     });
 
-    final authService = context.read<AuthService>();
-    final result = await authService.loginWithPassword(
-      role: UserRole.asha,
-      identifier: _idController.text.trim(),
-      password: _passwordController.text,
+    final ashaProvider = context.read<AshaStateProvider>();
+    final worker = await ashaProvider.login(
+      _idController.text.trim(),
+      _passwordController.text,
     );
 
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    if (result.success) {
+    if (worker != null) {
       context.read<AppStateProvider>().selectRole(UserRole.asha);
-
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-          ),
-          icon: const Icon(
-            Icons.check_circle_rounded,
-            color: AppColors.success,
-            size: 48,
-          ),
-          title: Text(l10n.login),
-          content: Text(
-            '${l10n.roleAsha} — ${_idController.text.trim()}\n\nAuthentication successful! ASHA dashboard will be available in later chunks.',
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                Navigator.of(context).pop();
-              },
-              child: Text(l10n.back),
-            ),
-          ],
-        ),
-      );
+      context.go(RouteNames.ashaDashboard);
     } else {
       setState(() => _errorMessage = l10n.errorInvalidCredentials);
     }
@@ -224,6 +198,76 @@ class _AshaLoginScreenState extends State<AshaLoginScreen> {
                 onPressed: _onLogin,
                 isLoading: _isLoading,
                 icon: Icons.login_rounded,
+              ),
+
+              const SizedBox(height: AppTheme.spacingMd),
+
+              // ── Quick Demo Mode Button ──────────────────────────────
+              OutlinedButton.icon(
+                onPressed: _isLoading
+                    ? null
+                    : () async {
+                        final ashaProvider =
+                            context.read<AshaStateProvider>();
+                        final appState =
+                            context.read<AppStateProvider>();
+                        setState(() => _isLoading = true);
+                        try {
+                          ashaProvider.setWorker(AshaWorker.demoWorker);
+                          appState.selectRole(UserRole.asha);
+                          final seeded =
+                              await ashaProvider.seedDemoData();
+                          if (!mounted) return;
+                          setState(() => _isLoading = false);
+                          if (!seeded) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Demo login OK, but sample data could not sync: '
+                                  '${ashaProvider.lastError ?? 'unknown error'}. '
+                                  'Check internet / Firestore rules.',
+                                ),
+                                backgroundColor: AppColors.error,
+                                duration: const Duration(seconds: 6),
+                              ),
+                            );
+                          }
+                          context.go(RouteNames.ashaDashboard);
+                        } catch (e) {
+                          if (!mounted) return;
+                          setState(() => _isLoading = false);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Demo mode failed: $e'),
+                              backgroundColor: AppColors.error,
+                              duration: const Duration(seconds: 6),
+                            ),
+                          );
+                        }
+                      },
+                icon: const Icon(Icons.flash_on_rounded, color: AppColors.roleAsha),
+                label: const Text(
+                  '⚡ One-Click Demo Mode (ASHA001)',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.roleAsha,
+                    fontSize: 15,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: AppColors.roleAsha, width: 1.5),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: AppTheme.spacingMd),
+              
+              TextButton(
+                onPressed: () => context.push(RouteNames.ashaRegister),
+                child: const Text('New ASHA Worker? Register Here'),
               ),
             ],
           ),
