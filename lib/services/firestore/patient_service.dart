@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:ui' as ui;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../models/patient.dart';
 import '../../models/patient_link.dart';
@@ -69,6 +73,31 @@ class PatientService {
     // Generate a unique Patient ID
     final patientId = _idGenerator.generate();
 
+    // Generate static base64 QR code
+    String? qrCodeBase64;
+    try {
+      final qrValidationResult = QrValidator.validate(
+        data: patientId,
+        version: QrVersions.auto,
+        errorCorrectionLevel: QrErrorCorrectLevel.L,
+      );
+      if (qrValidationResult.status == QrValidationStatus.valid) {
+        final qrCode = qrValidationResult.qrCode;
+        final painter = QrPainter.withQr(
+          qr: qrCode!,
+          color: const ui.Color(0xFF000000),
+          emptyColor: const ui.Color(0xFFFFFFFF),
+          gapless: true,
+        );
+        final picData = await painter.toImageData(256, format: ui.ImageByteFormat.png);
+        if (picData != null) {
+          qrCodeBase64 = 'data:image/png;base64,${base64Encode(picData.buffer.asUint8List())}';
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) debugPrint('[PatientService] Error generating QR: $e');
+    }
+
     final now = DateTime.now();
 
     final patient = Patient(
@@ -82,6 +111,7 @@ class PatientService {
       createdAt: now,
       updatedAt: now,
       status: 'active',
+      qrCodeBase64: qrCodeBase64,
     );
 
     final patientLink = PatientLink(
@@ -337,6 +367,79 @@ class PatientService {
     } catch (e) {
       if (kDebugMode) {
         debugPrint('[PatientService] Error checking patient ID existence: $e');
+      }
+      rethrow;
+    }
+  }
+
+  /// Retrieves a patient by their Patient ID without ownership check.
+  ///
+  /// Used by authorized doctors to access patient profiles after QR scan,
+  /// name search, or appointment navigation. The caller must verify
+  /// doctor authorization before calling this method.
+  ///
+  /// Returns `null` if the patient does not exist.
+  Future<Patient?> getPatientById(String patientId) async {
+    final user = _auth.currentUser;
+    if (user == null) return null;
+
+    try {
+      final snapshot = await _patientsRef.doc(patientId).get();
+      if (!snapshot.exists) return null;
+      return Patient.fromFirestore(snapshot);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[PatientService] Error fetching patient by ID $patientId: $e');
+      }
+      rethrow;
+    }
+  }
+
+  /// Searches patients by name prefix for doctor patient lookup.
+  ///
+  /// Returns up to [limit] matching patients with disambiguation fields
+  /// (Patient ID, village/location, age, phone number).
+  ///
+  /// Uses Firestore range query on the `name` field for prefix matching.
+  /// The caller must verify doctor authorization before calling this method.
+  Future<List<Patient>> searchPatientsByName(
+    String query, {
+    int limit = 20,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) return [];
+
+    final trimmed = query.trim();
+    if (trimmed.isEmpty) return [];
+
+    try {
+      // For prototype/demo scale, fetch a larger batch and filter locally.
+      // This allows case-insensitive, substring search which Firestore natively lacks.
+      final snapshot = await _patientsRef.limit(200).get();
+
+      if (kDebugMode) {
+        debugPrint('[PatientService] SEARCH: Fetched ${snapshot.docs.length} patients from Firestore.');
+      }
+
+      final allPatients = snapshot.docs.map((doc) => Patient.fromFirestore(doc)).toList();
+      
+      final results = allPatients.where((p) {
+        final match = p.name.toLowerCase().contains(trimmed.toLowerCase()) || 
+                      p.patientId.toLowerCase().contains(trimmed.toLowerCase());
+        if (kDebugMode && match) {
+          debugPrint('[PatientService] SEARCH: Match found -> ${p.name} (${p.patientId})');
+        }
+        return match;
+      }).take(limit).toList();
+
+      if (kDebugMode) {
+        debugPrint('[PatientService] SEARCH: Returning ${results.length} total results.');
+      }
+
+      return results;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[PatientService] Error searching patients by name: $e');
       }
       rethrow;
     }

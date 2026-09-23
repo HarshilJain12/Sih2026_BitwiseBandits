@@ -18,10 +18,7 @@ ON CONFLICT (id) DO UPDATE SET
   file_size_limit = 10485760,
   allowed_mime_types = ARRAY['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
 
--- 2. Enable Row Level Security on storage.objects
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
-
--- 3. Drop any existing/conflicting policies on medical-records bucket
+-- 2. Drop any existing/conflicting policies on medical-records bucket
 DROP POLICY IF EXISTS "Patients can read own medical records" ON storage.objects;
 DROP POLICY IF EXISTS "Patients can upload own medical records" ON storage.objects;
 DROP POLICY IF EXISTS "Patients can update own medical records" ON storage.objects;
@@ -31,22 +28,33 @@ DROP POLICY IF EXISTS "Patients can upload their own medical records" ON storage
 DROP POLICY IF EXISTS "Patients can delete their own medical records" ON storage.objects;
 
 -- 4. SELECT (Download / Read):
--- Only authenticated users whose Firebase UID (sub) matches the first path segment
+-- Allows authenticated users (via Firebase JWT) whose UID (sub) matches the first path segment
 CREATE POLICY "Patients can read own medical records"
 ON storage.objects FOR SELECT
-TO authenticated
+TO anon, authenticated
 USING (
   bucket_id = 'medical-records'
+  AND (auth.jwt() ->> 'sub') IS NOT NULL
   AND (storage.foldername(name))[1] = (auth.jwt() ->> 'sub')
+);
+
+-- TEMPORARY POLICY FOR MOCK DOCTORS (MVP/Demo only):
+-- Allows any authenticated user to read medical records so the mock doctor can view them.
+CREATE POLICY "Mock Doctors can read all medical records"
+ON storage.objects FOR SELECT
+TO anon, authenticated
+USING (
+  bucket_id = 'medical-records'
 );
 
 -- 5. INSERT (Upload):
 -- Can only insert objects inside their own {firebaseUid}/ directory
 CREATE POLICY "Patients can upload own medical records"
 ON storage.objects FOR INSERT
-TO authenticated
+TO anon, authenticated
 WITH CHECK (
   bucket_id = 'medical-records'
+  AND (auth.jwt() ->> 'sub') IS NOT NULL
   AND (storage.foldername(name))[1] = (auth.jwt() ->> 'sub')
 );
 
@@ -54,13 +62,15 @@ WITH CHECK (
 -- Can only update objects inside their own {firebaseUid}/ directory
 CREATE POLICY "Patients can update own medical records"
 ON storage.objects FOR UPDATE
-TO authenticated
+TO anon, authenticated
 USING (
   bucket_id = 'medical-records'
+  AND (auth.jwt() ->> 'sub') IS NOT NULL
   AND (storage.foldername(name))[1] = (auth.jwt() ->> 'sub')
 )
 WITH CHECK (
   bucket_id = 'medical-records'
+  AND (auth.jwt() ->> 'sub') IS NOT NULL
   AND (storage.foldername(name))[1] = (auth.jwt() ->> 'sub')
 );
 
@@ -68,8 +78,10 @@ WITH CHECK (
 -- Can only delete objects inside their own {firebaseUid}/ directory
 CREATE POLICY "Patients can delete own medical records"
 ON storage.objects FOR DELETE
-TO authenticated
+TO anon, authenticated
 USING (
   bucket_id = 'medical-records'
+  AND (auth.jwt() ->> 'sub') IS NOT NULL
   AND (storage.foldername(name))[1] = (auth.jwt() ->> 'sub')
 );
+

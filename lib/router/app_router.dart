@@ -11,6 +11,9 @@ import '../models/medical_record_category.dart';
 import '../models/patient.dart';
 import '../models/user_role.dart';
 import '../providers/app_state_provider.dart';
+import '../screens/doctor_dashboard/doctor_dashboard_screen.dart';
+import '../screens/doctor_dashboard/doctor_patient_record_screen.dart';
+import '../screens/doctor_dashboard/doctor_qr_scanner_screen.dart';
 import '../screens/language_selection/language_selection_screen.dart';
 import '../screens/login/asha/asha_login_screen.dart';
 import '../screens/login/doctor/doctor_login_screen.dart';
@@ -40,6 +43,7 @@ import '../screens/medical_records/medical_record_success_screen.dart';
 import '../screens/medical_records/patient_medical_records_screen.dart';
 import '../screens/patient_dashboard/hospital_map_screen.dart';
 import '../screens/patient_dashboard/patient_dashboard_screen.dart';
+import '../screens/patient_dashboard/patient_qr_display_screen.dart';
 import '../screens/registration/patient/patient_location_choice_screen.dart';
 import '../screens/registration/patient/patient_location_manual_screen.dart';
 import '../screens/registration/patient/patient_location_map_screen.dart';
@@ -419,6 +423,36 @@ class AppRouter {
         GoRoute(
           path: RouteNames.patientAwareness,
           builder: (context, state) => const PatientAwarenessScreen(),
+        ),
+
+        // Patient QR Display
+        GoRoute(
+          path: RouteNames.patientQrDisplay,
+          builder: (context, state) {
+            final patient = state.extra is Patient ? state.extra as Patient : null;
+            return PatientQrDisplayScreen(patient: patient);
+          },
+        ),
+
+        // Doctor Dashboard
+        GoRoute(
+          path: RouteNames.doctorDashboard,
+          builder: (context, state) => const DoctorDashboardScreen(),
+        ),
+
+        // Doctor QR Scanner
+        GoRoute(
+          path: RouteNames.doctorQrScanner,
+          builder: (context, state) => const DoctorQrScannerScreen(),
+        ),
+
+        // Doctor Patient Record
+        GoRoute(
+          path: RouteNames.doctorPatientRecord,
+          builder: (context, state) {
+            final patientId = state.extra as String? ?? '';
+            return DoctorPatientRecordScreen(patientId: patientId);
+          },
         ),
       ],
     );

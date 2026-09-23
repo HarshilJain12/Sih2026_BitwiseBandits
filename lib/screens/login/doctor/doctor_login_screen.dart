@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/route_names.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/validators.dart';
@@ -77,36 +79,20 @@ class _DoctorLoginScreenState extends State<DoctorLoginScreen> {
     setState(() => _isLoading = false);
 
     if (result.success) {
-      context.read<AppStateProvider>().selectRole(UserRole.doctor);
+      final doctorId = _idController.text.trim();
 
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-          ),
-          icon: const Icon(
-            Icons.check_circle_rounded,
-            color: AppColors.success,
-            size: 48,
-          ),
-          title: Text(l10n.login),
-          content: Text(
-            '${l10n.roleDoctor} — ${_idController.text.trim()}\n\nAuthentication successful! Doctor dashboard will be available in later chunks.',
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                Navigator.of(context).pop();
-              },
-              child: Text(l10n.back),
-            ),
-          ],
-        ),
+      // Extract doctor name and specialization from auth result
+      // MockAuthService stores metadata in the result
+      final doctorName = result.metadata?['name'] as String? ?? doctorId;
+      final specialization = result.metadata?['specialization'] as String? ?? 'General Medicine';
+
+      context.read<AppStateProvider>().setDoctorSession(
+        doctorId: doctorId,
+        name: doctorName,
+        specialization: specialization,
       );
+
+      context.go(RouteNames.doctorDashboard);
     } else {
       setState(() => _errorMessage = l10n.errorInvalidCredentials);
     }

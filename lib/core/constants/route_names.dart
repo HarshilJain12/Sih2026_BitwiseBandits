@@ -63,4 +63,12 @@ class RouteNames {
 
   // Patient - Health Awareness
   static const String patientAwareness = '/patient/awareness';
+
+  // Patient QR Display
+  static const String patientQrDisplay = '/patient/qr-code';
+
+  // Doctor Dashboard routes
+  static const String doctorDashboard = '/doctor/dashboard';
+  static const String doctorQrScanner = '/doctor/scan-qr';
+  static const String doctorPatientRecord = '/doctor/patient-record';
 }

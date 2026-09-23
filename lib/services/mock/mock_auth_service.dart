@@ -15,6 +15,14 @@ class MockAuthService implements AuthService {
   static const _delay = Duration(milliseconds: 1200);
   String? _currentUserId;
 
+  /// Simulated staff credentials with metadata for dashboard display.
+  static const _staffCredentials = {
+    'DOC001': {'name': 'Rajesh Sharma', 'specialization': 'General Medicine'},
+    'DOC002': {'name': 'Priya Mehta', 'specialization': 'Pediatrics'},
+    'DOC003': {'name': 'Amit Deshmukh', 'specialization': 'Orthopedics'},
+    'DOCTOR1@GMAIL.COM': {'name': 'Dr. First Doctor', 'specialization': 'Neurology'},
+  };
+
   @override
   String? get currentUserId => _currentUserId;
 
@@ -30,6 +38,17 @@ class MockAuthService implements AuthService {
       return AuthResult.failure(AuthFailureReason.invalidCredentials);
     }
     _currentUserId = 'mock_staff_${role.name}_123';
+
+    // For doctors, attach metadata for dashboard display
+    if (role == UserRole.doctor) {
+      final trimmedId = identifier.trim().toUpperCase();
+      final creds = _staffCredentials[trimmedId] ?? {
+        'name': identifier.trim(),
+        'specialization': 'General Medicine',
+      };
+      return AuthResult.success(uid: _currentUserId, metadata: creds);
+    }
+
     return AuthResult.success(uid: _currentUserId);
   }
 

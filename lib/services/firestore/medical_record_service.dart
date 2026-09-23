@@ -324,4 +324,131 @@ class MedicalRecordService {
     final updatedSnap = await docRef.get();
     return MedicalRecord.fromFirestore(updatedSnap);
   }
+
+  /// Retrieves all medical records for a patient (doctor access — no ownership filter).
+  ///
+  /// Used by authorized doctors to view a patient's complete medical history.
+  /// The caller must verify doctor authorization before calling this method.
+  Future<List<MedicalRecord>> getRecordsForDoctor(String patientId) async {
+    final user = _auth.currentUser;
+    if (user == null) return [];
+
+    try {
+      final snapshot = await _recordsRef(patientId)
+          .orderBy('uploadedAt', descending: true)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => MedicalRecord.fromFirestore(doc))
+          .toList();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '[MedicalRecordService] Error fetching records for doctor view: $e',
+        );
+      }
+      rethrow;
+    }
+  }
+
+  /// Creates a medical record with doctor audit metadata.
+  ///
+  /// Supports two modes:
+  /// 1. Notes-only: Creates a record with clinical notes (no file upload).
+  /// 2. Document upload: Uploads file via [_storage] and creates metadata.
+  ///
+  /// Doctor identity is derived from the authenticated session, not client input.
+  Future<MedicalRecord> addDoctorRecord({
+    required String patientId,
+    required String doctorUid,
+    required String doctorName,
+    String? doctorSpecialization,
+    String? category,
+    String? notes,
+    String? originalFileName,
+    Uint8List? bytes,
+    String? mimeType,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw StateError('Cannot create doctor record: no authenticated user.');
+    }
+
+    // Verify patient exists
+    final patientSnap = await _patientDocRef(patientId).get();
+    if (!patientSnap.exists) {
+      throw StateError('Patient profile $patientId does not exist.');
+    }
+
+    final recordId = _idGenerator.generate();
+    final now = DateTime.now();
+
+    String storagePath = '';
+    String storageType = 'none';
+    String resolvedMimeType = mimeType ?? 'text/plain';
+    int fileSizeBytes = 0;
+    String? downloadUrl;
+    String resolvedFileName = originalFileName ?? 'doctor_note.txt';
+
+    // If file bytes are provided, upload them
+    if (bytes != null && bytes.isNotEmpty) {
+      final uploadResult = await _storage.uploadBytes(
+        ownerUid: doctorUid,
+        patientId: patientId,
+        recordId: recordId,
+        originalFileName: resolvedFileName,
+        bytes: bytes,
+        mimeType: mimeType,
+      );
+
+      storagePath = uploadResult.storagePath;
+      storageType = _storage.storageType;
+      resolvedMimeType = uploadResult.mimeType;
+      fileSizeBytes = uploadResult.fileSizeBytes;
+      downloadUrl = uploadResult.downloadUrl;
+    }
+
+    final record = MedicalRecord(
+      recordId: recordId,
+      patientId: patientId,
+      ownerUid: doctorUid,
+      originalFileName: resolvedFileName,
+      storagePath: storagePath,
+      storageType: storageType,
+      downloadUrl: downloadUrl,
+      mimeType: resolvedMimeType,
+      fileSizeBytes: fileSizeBytes,
+      uploadedAt: now,
+      updatedAt: now,
+      status: 'uploaded',
+      category: category,
+      notes: notes,
+      doctorUid: doctorUid,
+      doctorName: doctorName,
+      doctorSpecialization: doctorSpecialization,
+    );
+
+    try {
+      await _recordsRef(patientId)
+          .doc(recordId)
+          .set(record.toFirestore(useServerTimestamp: true));
+
+      if (kDebugMode) {
+        debugPrint(
+          '[MedicalRecordService] Doctor $doctorName created record $recordId for patient $patientId.',
+        );
+      }
+
+      final savedSnap = await _recordsRef(patientId).doc(recordId).get();
+      return MedicalRecord.fromFirestore(savedSnap);
+    } catch (e) {
+      // Cleanup uploaded file on metadata failure
+      if (storagePath.isNotEmpty) {
+        try {
+          await _storage.deleteFile(storagePath);
+        } catch (_) {}
+      }
+      rethrow;
+    }
+  }
 }

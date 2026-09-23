@@ -375,6 +375,25 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
             ),
           ),
           const SizedBox(height: AppTheme.spacingXl),
+
+          // Show QR Code Button
+          ElevatedButton.icon(
+            onPressed: () => context.push(
+              RouteNames.patientQrDisplay,
+              extra: patient,
+            ),
+            icon: const Icon(Icons.qr_code_2_rounded),
+            label: const Text('Show My QR Code'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 52),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppTheme.radiusLg),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppTheme.spacingMd),
           ElevatedButton.icon(
             onPressed: () async {
               await authService.logout();

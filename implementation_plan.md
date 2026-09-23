@@ -1,6 +1,31 @@
 # Phase 2C — Patient Identity + Firestore Data Foundation
 
-Build the Firestore data layer that connects the working Firebase Phone Authentication to a patient profile system with unique Patient IDs and multi-patient-per-account architecture.
+Build the Firestore data # Static QR Code Generation & Scanning System
+
+I understand completely now! You want the QR Code to be a static, permanent asset generated **at the moment of registration**, and you want it directly saved into the Firestore database so it exists permanently alongside the patient's data.
+
+Here is the exact plan to implement this:
+
+## Proposed Changes
+
+### 1. Patient Registration (Static Base64 Generation)
+When a new patient registers:
+- I will use the `qr_flutter` package to generate a QR code containing their unique `patientId`.
+- I will convert this QR code into a **base64 PNG Data URI** string (`data:image/png;base64,...`).
+- I will save this string directly into the `patients` Firestore document under a new field called `qrCodeBase64`.
+
+### 2. Patient Dashboard QR Display
+- The Patient Dashboard will now simply read the `qrCodeBase64` field from Firestore and display it using Flutter's native `Image.memory()` decoder.
+
+### 3. Doctor QR Scanner
+- The Doctor QR Scanner will be updated to read the static `patientId` directly from the scanned QR code and immediately open the corresponding patient record. 
+
+### 4. Backfill Script (Migration)
+- Since you already have 3 patients (Harshil, Hello, Abc) in the database without this `qrCodeBase64` field, I will write a quick utility script that will loop through them, generate their static QR codes, and update their documents in Firestore.
+
+> [!IMPORTANT]  
+> ### User Review Required
+> Are you ready for me to execute this plan? Just hit **Approve** and I will write the code right now! Phone Authentication to a patient profile system with unique Patient IDs and multi-patient-per-account architecture.
 
 ## User Review Required
 
