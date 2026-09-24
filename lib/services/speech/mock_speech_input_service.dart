@@ -1,11 +1,26 @@
+import 'dart:async';
 import 'dart:math';
+
 import 'speech_input_service.dart';
 
-/// Prototype mock implementation of [SpeechInputService].
-///
-/// Provides sample spoken health descriptions in English/Hindi for demo.
+/// Testable and demo mock implementation of [SpeechInputService].
 class MockSpeechInputService implements SpeechInputService {
+  MockSpeechInputService({
+    this.mockAvailable = true,
+    this.mockResult,
+    this.mockError,
+    this.simulatedDelay = const Duration(milliseconds: 200),
+  });
+
+  final bool mockAvailable;
+  final String? mockResult;
+  final String? mockError;
+  final Duration simulatedDelay;
   final Random _random = Random();
+
+  bool _isListening = false;
+  int startListeningCallCount = 0;
+  String? lastRequestedLocaleId;
 
   static const List<String> _sampleVoiceInputs = [
     'I have severe stomach pain since morning',
@@ -15,14 +30,120 @@ class MockSpeechInputService implements SpeechInputService {
     'छाती में दर्द और सांस लेने में तकलीफ हो रही है',
   ];
 
-  @override
-  Future<bool> isAvailable() async => true;
+  Timer? _activeTimer;
 
   @override
-  Future<String?> listenForSpeech({String lang = 'en-IN'}) async {
-    // Simulate listening delay
-    await Future.delayed(const Duration(milliseconds: 1200));
-    final index = _random.nextInt(_sampleVoiceInputs.length);
-    return _sampleVoiceInputs[index];
+  bool get isListening => _isListening;
+
+  @override
+  Future<bool> initialize({
+    SpeechErrorCallback? onError,
+    SpeechStatusCallback? onStatus,
+  }) async {
+    return mockAvailable;
+  }
+
+  @override
+  Future<bool> isAvailable() async => mockAvailable;
+
+  @override
+  String resolveLocaleId(String languageCode) {
+    switch (languageCode.toLowerCase().trim()) {
+      case 'hi':
+        return 'hi_IN';
+      case 'mr':
+        return 'mr_IN';
+      case 'en':
+      default:
+        return 'en_IN';
+    }
+  }
+
+  @override
+  Future<bool> startListening({
+    required SpeechResultCallback onResult,
+    SpeechErrorCallback? onError,
+    String? localeId,
+  }) async {
+    if (_isListening) {
+      // Avoid duplicate simultaneous sessions
+      return true;
+    }
+
+    _activeTimer?.cancel();
+    startListeningCallCount++;
+    lastRequestedLocaleId = localeId;
+
+    if (!mockAvailable) {
+      onError?.call(mockError ?? 'Speech recognition unavailable');
+      return false;
+    }
+
+    _isListening = true;
+
+    if (mockError != null) {
+      _isListening = false;
+      onError?.call(mockError!);
+      return false;
+    }
+
+    final speechText = mockResult ?? _sampleVoiceInputs[_random.nextInt(_sampleVoiceInputs.length)];
+
+    // Simulate partial result then final result
+    _activeTimer = Timer(simulatedDelay, () {
+      if (_isListening) {
+        onResult(speechText, true);
+        _isListening = false;
+      }
+    });
+
+    return true;
+  }
+
+  @override
+  Future<void> stopListening() async {
+    _activeTimer?.cancel();
+    _activeTimer = null;
+    _isListening = false;
+  }
+
+  @override
+  Future<void> cancelListening() async {
+    _activeTimer?.cancel();
+    _activeTimer = null;
+    _isListening = false;
+  }
+
+  @override
+  Future<String?> listenForSpeech({
+    String? localeId,
+    String? lang,
+    void Function(String partialText)? onPartialResult,
+  }) async {
+    final completer = Completer<String?>();
+    final ok = await startListening(
+      localeId: localeId ?? lang,
+      onResult: (text, isFinal) {
+        onPartialResult?.call(text);
+        if (isFinal && !completer.isCompleted) {
+          completer.complete(text);
+        }
+      },
+      onError: (err) {
+        if (!completer.isCompleted) {
+          completer.complete(null);
+        }
+      },
+    );
+
+    if (!ok) return null;
+    return completer.future;
+  }
+
+  @override
+  void dispose() {
+    _activeTimer?.cancel();
+    _activeTimer = null;
+    _isListening = false;
   }
 }

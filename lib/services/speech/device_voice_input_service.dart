@@ -207,13 +207,15 @@ class DeviceVoiceInputService implements SpeechInputService {
   @override
   Future<String?> listenForSpeech({
     String? localeId,
+    String? lang,
     void Function(String partialText)? onPartialResult,
   }) async {
     final completer = Completer<String?>();
     String lastRecognized = '';
 
+    final target = localeId ?? (lang != null ? resolveLocaleId(lang) : null);
     final started = await startListening(
-      localeId: localeId,
+      localeId: target,
       onResult: (words, isFinal) {
         lastRecognized = words;
         onPartialResult?.call(words);

@@ -13,6 +13,7 @@ import '../../models/patient.dart';
 import '../../providers/app_state_provider.dart';
 import '../../services/firestore/medical_record_service.dart';
 import '../../services/firestore/patient_service.dart';
+import '../doctor/widgets/doctor_patient_ai_summary_view.dart';
 import '../medical_records/widgets/document_viewer_dialog.dart';
 
 /// Unified Patient Medical Record screen for doctors.
@@ -172,6 +173,11 @@ class _DoctorPatientRecordScreenState extends State<DoctorPatientRecordScreen> {
 
             // ── Health Tags ──────────────────────────────────────
             _buildHealthTags(patient),
+
+            const SizedBox(height: AppTheme.spacingLg),
+
+            // ── AI Health Summary & Clinical Insights ────────────
+            DoctorPatientAiSummaryView(patient: patient),
 
             const SizedBox(height: AppTheme.spacingXl),
 

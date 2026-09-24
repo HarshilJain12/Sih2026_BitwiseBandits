@@ -21,11 +21,13 @@ class SupabaseMedicalRecordStorage implements MedicalRecordStorage {
   SupabaseMedicalRecordStorage({
     SupabaseClient? client,
     String? bucketName,
-  }) : _client = client ?? Supabase.instance.client,
+  }) : _customClient = client,
        _bucketName = bucketName ?? SupabaseConfig.medicalRecordsBucket;
 
-  final SupabaseClient _client;
+  final SupabaseClient? _customClient;
   final String _bucketName;
+
+  SupabaseClient get _client => _customClient ?? Supabase.instance.client;
 
   @override
   String get storageType => 'supabase';

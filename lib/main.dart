@@ -24,6 +24,7 @@ import 'services/firestore/patient_service.dart';
 import 'services/interfaces/auth_service.dart';
 import 'services/interfaces/storage_service.dart';
 import 'services/mock/mock_storage_service.dart';
+import 'services/firestore/patient_ai_analysis_service.dart';
 import 'services/storage/medical_record_storage.dart';
 import 'services/storage/supabase_medical_record_storage.dart';
 import 'services/firestore/asha_data_service.dart';
@@ -37,8 +38,8 @@ void main() async {
   // Initialize Firebase before the application renders
   await FirebaseInitializer.initialize();
 
-  // Run one-time backfill migration for existing patients without QR base64
-  await _runBackfillMigration();
+  // Run one-time backfill migration for existing patients without QR base64 asynchronously
+  _runBackfillMigration().ignore();
 
   // Initialize Supabase with Firebase Third-Party Auth integration
   await SupabaseInitializer.initialize();
@@ -56,6 +57,7 @@ void main() async {
   final hospitalAdminService = HospitalAdminService(
     ashaDataService: ashaDataService,
   );
+  final patientAiAnalysisService = PatientAiAnalysisService();
   final appState = AppStateProvider(storageService: storageService);
   final ashaState = AshaStateProvider(dataService: ashaDataService);
   final adminState =
@@ -73,6 +75,7 @@ void main() async {
         Provider<PatientService>.value(value: patientService),
         Provider<MedicalRecordStorage>.value(value: medicalRecordStorage),
         Provider<MedicalRecordService>.value(value: medicalRecordService),
+        Provider<PatientAiAnalysisService>.value(value: patientAiAnalysisService),
         Provider<AshaDataService>.value(value: ashaDataService),
         Provider<HospitalAdminService>.value(value: hospitalAdminService),
         Provider<PatientQrService>.value(value: patientQrService),

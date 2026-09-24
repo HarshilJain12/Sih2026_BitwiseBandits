@@ -32,15 +32,18 @@ class MedicalRecordService {
     FirebaseAuth? auth,
     MedicalRecordStorage? storage,
     RecordIdGenerator? idGenerator,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _auth = auth ?? FirebaseAuth.instance,
+  }) : _customFirestore = firestore,
+       _customAuth = auth,
        _storage = storage ?? SupabaseMedicalRecordStorage(),
        _idGenerator = idGenerator ?? const RecordIdGenerator();
 
-  final FirebaseFirestore _firestore;
-  final FirebaseAuth _auth;
+  final FirebaseFirestore? _customFirestore;
+  final FirebaseAuth? _customAuth;
   final MedicalRecordStorage _storage;
   final RecordIdGenerator _idGenerator;
+
+  FirebaseFirestore get _firestore => _customFirestore ?? FirebaseFirestore.instance;
+  FirebaseAuth get _auth => _customAuth ?? FirebaseAuth.instance;
 
   /// Returns the active storage provider.
   MedicalRecordStorage get storage => _storage;

@@ -12,6 +12,7 @@ import '../../models/patient.dart';
 import '../../providers/app_state_provider.dart';
 import '../../services/firestore/patient_service.dart';
 import '../../services/interfaces/auth_service.dart';
+import 'widgets/ai_health_summary_widget.dart';
 import 'widgets/emergency_help_section.dart';
 import 'widgets/find_hospital_section.dart';
 import 'widgets/follow_up_section.dart';
@@ -110,14 +111,19 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
     }
   }
 
-  void _onOpenMap(HospitalResult selected, List<HospitalResult> allResults) {
+  void _onOpenMap(
+    HospitalResult selected,
+    List<HospitalResult> allResults, {
+    double? userLat,
+    double? userLng,
+  }) {
     context.push(
       RouteNames.hospitalMap,
       extra: {
         'selectedHospital': selected,
         'allHospitals': allResults,
-        'userLat': _activePatient?.location?.latitude,
-        'userLng': _activePatient?.location?.longitude,
+        'userLat': userLat ?? _activePatient?.location?.latitude,
+        'userLng': userLng ?? _activePatient?.location?.longitude,
       },
     );
   }
@@ -256,8 +262,14 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
 
           // ── 2. Find the Hospital Section ──────────────────────────────
           FindHospitalSection(
-            patientLocation: patient.location,
-            onOpenMap: _onOpenMap,
+            onOpenMap: (selected, allResults, userLat, userLng) {
+              _onOpenMap(
+                selected,
+                allResults,
+                userLat: userLat,
+                userLng: userLng,
+              );
+            },
             onGetDirections: _onGetDirections,
           ),
 
@@ -293,6 +305,10 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
+          ),
+          const SizedBox(height: AppTheme.spacingMd),
+          AiHealthSummaryWidget(
+            patientId: patient.patientId,
           ),
           const SizedBox(height: AppTheme.spacingLg),
           Card(
