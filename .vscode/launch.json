@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Healthcare App (Debug)",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define=PLACES_API_KEY=AIzaSyAzNihyqeDlG8X93sAB7E2zujqy0l5GA7c",
+        "--dart-define=MAPS_API_KEY=AIzaSyAzNihyqeDlG8X93sAB7E2zujqy0l5GA7c"
+      ]
+    }
+  ]
+}

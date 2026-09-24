@@ -17,7 +17,10 @@ class ApiConfig {
     'PLACES_API_KEY',
     defaultValue: String.fromEnvironment(
       'GOOGLE_PLACES_API_KEY',
-      defaultValue: String.fromEnvironment('MAPS_API_KEY', defaultValue: ''),
+      defaultValue: String.fromEnvironment(
+        'MAPS_API_KEY',
+        defaultValue: 'AIzaSyAzNihyqeDlG8X93sAB7E2zujqy0l5GA7c',
+      ),
     ),
   );
 
