@@ -183,7 +183,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Diabetes Mentioned'), findsWidgets);
-      expect(find.text('Summary'), findsOneWidget);
+      expect(find.text('Summary & Key Highlights'), findsOneWidget);
       expect(find.textContaining('elevated HbA1c and daily Metformin'), findsOneWidget);
       expect(find.text('Documented Conditions'), findsOneWidget);
       expect(find.text('Current Medications'), findsOneWidget);

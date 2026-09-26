@@ -10,7 +10,7 @@ class AppLocalizationsMr extends AppLocalizations {
   AppLocalizationsMr([String locale = 'mr']) : super(locale);
 
   @override
-  String get appTitle => 'हेल्थकेअर अ‍ॅप';
+  String get appTitle => 'आरोग्य सेवा';
 
   @override
   String get chooseLanguage => 'तुमची भाषा निवडा';

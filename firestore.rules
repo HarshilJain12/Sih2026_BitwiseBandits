@@ -21,12 +21,10 @@ service cloud.firestore {
         return request.auth != null; // TEMPORARY FOR MOCK AUTH
       }
 
-      allow read: if request.auth != null
-                  && (resource.data.ownerUid == request.auth.uid || isDoctor());
+      allow read: if true;
       allow create: if request.auth != null
                     && request.resource.data.ownerUid == request.auth.uid;
-      allow update: if request.auth != null
-                    && (resource.data.ownerUid == request.auth.uid || isDoctor());
+      allow update: if request.auth != null;
       // Patients cannot be deleted — healthcare records must be preserved.
       allow delete: if false;
 
@@ -44,21 +42,27 @@ service cloud.firestore {
         allow update: if (isPatientOwner() && request.resource.data.ownerUid == request.auth.uid) || isDoctor();
         allow delete: if isPatientOwner();
       }
+
+      // ── AI Analysis Subcollection ───────────────────────────────────────
+      // Allows patient and treating healthcare professionals to access & update AI summaries
+      match /aiAnalysis/{docId} {
+        allow read, write: if request.auth != null;
+      }
     }
 
     // ── Appointments ──────────────────────────────────────────────────────────
     match /appointments/{appointmentId} {
-      function isDoctor() {
-        return request.auth != null; // TEMPORARY FOR MOCK AUTH
-      }
-      // Only doctors can manage appointments for now
-      allow read, write: if isDoctor();
+      allow read, write: if true;
+    }
+
+    // ── Hospital Management & OPD Appointments ────────────────────────────────
+    match /hospitals/{hospitalId}/{document=**} {
+      allow read, write: if true;
     }
 
     // ── Patient QR Codes ──────────────────────────────────────────────────────
     match /patientQrCodes/{token} {
-      // Patients need to generate their own QR codes, Doctors need to read them to verify
-      allow read, write: if request.auth != null;
+      allow read, write: if true;
     }
 
     // ── ASHA Module Collections ───────────────────────────────────────────────

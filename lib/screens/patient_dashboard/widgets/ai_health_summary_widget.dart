@@ -293,6 +293,39 @@ class AiHealthSummaryWidget extends StatelessWidget {
               const SizedBox(height: AppTheme.spacingLg),
             ],
 
+            // ── Prominent Allergy Warning (For Doctor Safety) ─────────────
+            if (analysis.allergies.isNotEmpty) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.errorContainer.withValues(alpha: 0.35),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                  border: Border.all(color: AppColors.errorContainer),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.warning_amber_rounded,
+                      color: AppColors.error,
+                      size: 18,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Allergy Alert: ${analysis.allergies.map((a) => a.name).join(", ")}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: AppColors.error,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppTheme.spacingMd),
+            ],
+
             // ── AI Summary Text ───────────────────────────────────────────
             Container(
               padding: const EdgeInsets.all(AppTheme.spacingMd),
@@ -304,20 +337,26 @@ class AiHealthSummaryWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Summary',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                      color: AppColors.primary,
-                    ),
+                  const Row(
+                    children: [
+                      Icon(Icons.notes_rounded, size: 16, color: AppColors.primary),
+                      SizedBox(width: 6),
+                      Text(
+                        'Summary & Key Highlights',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   Text(
                     analysis.summary,
                     style: const TextStyle(
                       fontSize: 13,
-                      height: 1.4,
+                      height: 1.45,
                       color: AppColors.textPrimary,
                     ),
                   ),

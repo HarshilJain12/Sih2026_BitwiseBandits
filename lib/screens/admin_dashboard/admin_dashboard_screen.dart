@@ -246,10 +246,18 @@ class _AdminHomeTab extends StatelessWidget {
         const SizedBox(height: AppTheme.spacingMd),
 
         _actionButton(
+          icon: Icons.receipt_long_rounded,
+          label: 'OPD / Appointment Slip',
+          subtitle: 'Instant patient slip generation & QR print',
+          color: AppColors.roleAdmin,
+          onTap: () => context.push(RouteNames.adminOpdSlip),
+        ),
+        const SizedBox(height: AppTheme.spacingMd),
+        _actionButton(
           icon: Icons.groups_rounded,
           label: 'OPD Queue',
           subtitle: 'Live token queue by doctor',
-          color: AppColors.roleAdmin,
+          color: const Color(0xFF00897B),
           onTap: () => onGoTab(1),
         ),
         const SizedBox(height: AppTheme.spacingMd),

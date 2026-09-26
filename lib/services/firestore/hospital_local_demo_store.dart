@@ -3,6 +3,7 @@ import '../../models/asha_worker.dart';
 import '../../models/awareness_campaign.dart';
 import '../../models/community_health_alert.dart';
 import '../../models/hospital_doctor.dart';
+import '../../models/opd_appointment.dart';
 import '../../models/patient.dart';
 
 /// In-memory demo dataset for the Hospital Admin dashboard.
@@ -13,6 +14,7 @@ class HospitalLocalDemoStore {
   final List<HospitalDoctor> doctors = [];
   final List<Patient> patients = [];
   final List<Appointment> appointments = [];
+  final List<OpdAppointment> opdAppointments = [];
   final List<CommunityHealthAlert> alerts = [];
   final List<AwarenessCampaign> campaigns = [];
   final List<AshaWorker> workers = [];
@@ -27,6 +29,7 @@ class HospitalLocalDemoStore {
     doctors.clear();
     patients.clear();
     appointments.clear();
+    opdAppointments.clear();
     alerts.clear();
     campaigns.clear();
     workers.clear();
@@ -57,10 +60,13 @@ class HospitalLocalDemoStore {
     }
 
     Patient patient(String id, String name, String phone, int age,
-        List<String> tags) {
+        List<String> tags, {String? qrToken}) {
       final p = Patient(
         patientId: id, ownerUid: 'demo-owner', name: name, phoneNumber: phone,
-        age: age, createdAt: now, updatedAt: now, healthTags: tags);
+        age: age, createdAt: now, updatedAt: now, healthTags: tags,
+        qrToken: qrToken ?? 'QRT-${id.replaceAll('-', '')}',
+        qrVersion: 1,
+      );
       patients.add(p);
       return p;
     }
@@ -73,6 +79,10 @@ class HospitalLocalDemoStore {
     final p6 = patient('P-1002938476', 'Aarav Patil', '+91 9822011228', 2, const []);
     final p7 = patient('P-1002938477', 'Sunita Patil', '+91 9822011229', 28, const ['Pregnant', 'Anemia']);
     final p8 = patient('P-1002938478', 'Prakash Jadhav', '+91 9822011230', 65, const ['Hypertension']);
+    // Seed same-name patients for testing disambiguation via mobile number:
+    patient('P-1002938479', 'Vikram Shinde', '+91 9876543212', 22, const []);
+    patient('P-1002938480', 'Vikram Shinde', '+91 9123456780', 25, const ['Diabetic']);
+    patient('P-1002938481', 'Vikram Kumar', '+91 8712345645', 27, const []);
 
     // OPD queue for today: completed → in-consultation → waiting.
     Appointment apt(Patient p, HospitalDoctor d, int hour, int minute,
@@ -232,6 +242,53 @@ class HospitalLocalDemoStore {
       createdAt: a.createdAt, updatedAt: DateTime.now());
   }
 
+  // ─── OPD Appointment Slip Management ────────────────────────────────
+  OpdAppointment createOpdAppointment(OpdAppointment appointment) {
+    // Determine assigned doctor based on category if matching doctor exists
+    HospitalDoctor? assignedDoc;
+    for (final d in doctors) {
+      if (d.specialization.toLowerCase() ==
+          appointment.doctorCategory.toLowerCase()) {
+        assignedDoc = d;
+        break;
+      }
+    }
+    assignedDoc ??= doctors.isNotEmpty ? doctors.first : null;
+
+    final assignedDoctorId = appointment.doctorId ?? assignedDoc?.doctorId ?? 'DOC001';
+    final assignedDoctorName =
+        appointment.doctorName ?? assignedDoc?.name ?? appointment.doctorCategory;
+
+    final effectiveAppt = appointment.copyWith(
+      doctorId: assignedDoctorId,
+      doctorName: assignedDoctorName,
+    );
+
+    opdAppointments.add(effectiveAppt);
+
+    // Also add to active appointments queue so it appears in the doctor queue & stats
+    final generalApt = Appointment(
+      appointmentId: effectiveAppt.appointmentId,
+      patientId: effectiveAppt.patientId ?? 'WALK_IN_${DateTime.now().millisecondsSinceEpoch}',
+      patientName: effectiveAppt.patientName,
+      doctorId: assignedDoctorId,
+      doctorName: assignedDoctorName,
+      scheduledAt: effectiveAppt.appointmentDate,
+      status: effectiveAppt.status,
+      type: 'opd_slip',
+      notes: effectiveAppt.doctorCategory,
+      createdAt: effectiveAppt.createdAt,
+    );
+    appointments.add(generalApt);
+
+    return effectiveAppt;
+  }
+
+  List<OpdAppointment> allOpdAppointments() => List.unmodifiable(opdAppointments);
+
+  List<OpdAppointment> todayOpdAppointments() =>
+      opdAppointments.where((o) => _isToday(o.appointmentDate)).toList();
+
   Map<String, int> overview() {
     final queue = todayQueue();
     return {
@@ -248,3 +305,4 @@ class HospitalLocalDemoStore {
     };
   }
 }
+

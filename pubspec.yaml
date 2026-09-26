@@ -1,5 +1,5 @@
 name: healthcare_app
-description: "SIH 2026 - Rural Healthcare Access App for Maharashtra"
+description: "Arogya Seva - Rural Healthcare Access App for Maharashtra"
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -48,6 +48,11 @@ dependencies:
   qr_flutter: ^4.1.0
   mobile_scanner: ^7.4.2
 
+  # Document printing & PDF generation
+  pdf: ^3.11.1
+  printing: ^5.13.2
+  video_player: ^2.14.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -56,3 +61,7 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/videos/

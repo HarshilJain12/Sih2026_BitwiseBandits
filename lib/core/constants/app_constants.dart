@@ -4,8 +4,10 @@
 class AppConstants {
   AppConstants._();
 
-  /// Temporary placeholder — replace with the finalized product name.
-  static const String kAppTitle = 'Healthcare App';
+  /// Application title
+  static const String kAppTitle = 'Arogya Seva';
+  static const String kAppTagline = 'Connecting Every Step of Your Healthcare Journey';
+  static const String kLogoAsset = 'assets/images/logo.png';
 
   /// Storage keys
   static const String kSelectedLanguageKey = 'selected_language_code';

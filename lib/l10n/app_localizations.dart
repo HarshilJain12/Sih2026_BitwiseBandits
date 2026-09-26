@@ -100,10 +100,10 @@ abstract class AppLocalizations {
     Locale('mr'),
   ];
 
-  /// Temporary placeholder app title
+  /// Application title
   ///
   /// In en, this message translates to:
-  /// **'Healthcare App'**
+  /// **'Arogya Seva'**
   String get appTitle;
 
   /// Language selection heading

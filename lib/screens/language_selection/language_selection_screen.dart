@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/constants/route_names.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
@@ -103,23 +104,30 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                   children: [
                     SizedBox(height: size.height * 0.04),
 
-                    // ── Healthcare Icon ──────────────────────────────────
+                    // ── App Logo ─────────────────────────────────────────
                     Center(
                       child: Container(
-                        width: 88,
-                        height: 88,
+                        width: 104,
+                        height: 104,
                         decoration: BoxDecoration(
-                          color: AppColors.primaryContainer,
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColors.primary.withValues(alpha: 0.3),
-                            width: 2,
-                          ),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primary.withValues(alpha: 0.15),
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                        child: const Icon(
-                          Icons.local_hospital_rounded,
-                          size: 44,
-                          color: AppColors.primary,
+                        child: ClipOval(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.asset(
+                              AppConstants.kLogoAsset,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                         ),
                       ),
                     ),

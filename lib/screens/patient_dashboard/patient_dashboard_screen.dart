@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/constants/route_names.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
@@ -10,6 +11,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/hospital_result.dart';
 import '../../models/patient.dart';
 import '../../providers/app_state_provider.dart';
+import '../../services/firestore/patient_ai_analysis_service.dart';
 import '../../services/firestore/patient_service.dart';
 import '../../services/interfaces/auth_service.dart';
 import 'widgets/ai_health_summary_widget.dart';
@@ -45,6 +47,9 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
           context
               .read<AppStateProvider>()
               .setCurrentPatientId(widget.patient!.patientId);
+          PatientAiAnalysisService.instance
+              .analyzePatientRecords(widget.patient!.patientId)
+              .ignore();
         }
       });
     } else {
@@ -82,6 +87,11 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
           }
           _isLoading = false;
         });
+        if (_activePatient != null) {
+          PatientAiAnalysisService.instance
+              .analyzePatientRecords(_activePatient!.patientId)
+              .ignore();
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -157,15 +167,20 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(6),
+              width: 38,
+              height: 38,
               decoration: const BoxDecoration(
-                color: AppColors.primaryContainer,
+                color: Colors.white,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.health_and_safety_rounded,
-                color: AppColors.primary,
-                size: 24,
+              child: ClipOval(
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Image.asset(
+                    AppConstants.kLogoAsset,
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: AppTheme.spacingSm),

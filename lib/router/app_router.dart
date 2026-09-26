@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../core/constants/app_constants.dart';
 import '../core/constants/route_names.dart';
+import '../core/theme/app_colors.dart';
 import '../models/hospital_result.dart';
 import '../models/medical_record.dart';
 import '../models/medical_record_category.dart';
@@ -33,6 +35,7 @@ import '../screens/follow_ups/asha_follow_ups_screen.dart';
 import '../screens/placeholders/asha_placeholders.dart';
 import '../screens/alerts/asha_awareness_screen.dart';
 import '../screens/admin_dashboard/admin_dashboard_screen.dart';
+import '../screens/admin_dashboard/admin_opd_slip_screen.dart';
 import '../screens/alerts/admin_community_alerts_screen.dart';
 import '../screens/alerts/admin_create_awareness_screen.dart';
 import '../screens/alerts/patient_awareness_screen.dart';
@@ -53,6 +56,7 @@ import '../screens/registration/patient/patient_registration_screen.dart';
 import '../screens/registration/patient/patient_registration_success_screen.dart';
 import '../screens/registration/placeholder/registration_placeholder_screen.dart';
 import '../screens/registration/role_selection/registration_role_selection_screen.dart';
+import '../screens/intro/intro_video_screen.dart';
 import '../screens/role_selection/role_selection_screen.dart';
 
 /// App-wide GoRouter configuration.
@@ -63,7 +67,7 @@ class AppRouter {
   static GoRouter createRouter(AppStateProvider appState) {
     return GoRouter(
       refreshListenable: appState,
-      initialLocation: RouteNames.splash,
+      initialLocation: RouteNames.intro,
       redirect: (context, state) {
         // Wait for initialization
         if (!appState.isInitialized) return null;
@@ -78,6 +82,12 @@ class AppRouter {
         return null;
       },
       routes: [
+        // Intro Video (first thing the user sees)
+        GoRoute(
+          path: RouteNames.intro,
+          builder: (context, state) => const IntroVideoScreen(),
+        ),
+
         // Splash (handled by redirect above — renders empty briefly)
         GoRoute(
           path: RouteNames.splash,
@@ -425,6 +435,10 @@ class AppRouter {
             return AdminCreateAwarenessScreen(alert: alert);
           },
         ),
+        GoRoute(
+          path: RouteNames.adminOpdSlip,
+          builder: (context, state) => const AdminOpdSlipScreen(),
+        ),
 
         // Patient Awareness Route
         GoRoute(
@@ -473,6 +487,66 @@ class _SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.watch<AppStateProvider>();
-    return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: ClipOval(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Image.asset(
+                    AppConstants.kLogoAsset,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              AppConstants.kAppTitle,
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              AppConstants.kAppTagline,
+              style: TextStyle(
+                fontSize: 13,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 36),
+            const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                color: AppColors.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

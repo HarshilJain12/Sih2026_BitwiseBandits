@@ -6,6 +6,7 @@ import '../../models/asha_worker.dart';
 import '../../models/awareness_campaign.dart';
 import '../../models/community_health_alert.dart';
 import '../../models/hospital_doctor.dart';
+import '../../models/opd_appointment.dart';
 import '../../models/patient.dart';
 import 'asha_data_service.dart';
 import 'hospital_local_demo_store.dart';
@@ -17,11 +18,16 @@ import 'hospital_local_demo_store.dart';
 /// (hospital admin signs in via mock auth, so it often has no Firebase user),
 /// every method transparently serves the built-in [HospitalLocalDemoStore].
 class HospitalAdminService {
-  HospitalAdminService({AshaDataService? ashaDataService})
-      : _asha = ashaDataService ?? AshaDataService();
+  HospitalAdminService({
+    AshaDataService? ashaDataService,
+    FirebaseFirestore? firestore,
+  })  : _ashaInstance = ashaDataService,
+        _firestore = firestore;
 
-  final AshaDataService _asha;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final AshaDataService? _ashaInstance;
+  AshaDataService get _asha => _ashaInstance ?? AshaDataService();
+  final FirebaseFirestore? _firestore;
+  FirebaseFirestore get _db => _firestore ?? FirebaseFirestore.instance;
 
   bool localDemoMode = false;
   final HospitalLocalDemoStore localStore = HospitalLocalDemoStore();
@@ -37,6 +43,20 @@ class HospitalAdminService {
   void disableLocalDemo() {
     localDemoMode = false;
   }
+
+  /// Standard and hospital specialty categories for OPD slips.
+  static const List<String> defaultDoctorCategories = [
+    'General Medicine',
+    'Pediatrics',
+    'Orthopedics',
+    'Gynecology',
+    'Cardiology',
+    'Dermatology',
+    'ENT',
+    'Dentistry',
+    'Ophthalmology',
+    'General Surgery',
+  ];
 
   /// Static staff directory (mirrors the mock auth staff list).
   static const List<HospitalDoctor> staffDirectory = [
@@ -151,6 +171,108 @@ class HospitalAdminService {
     await updateAppointmentStatus(waiting.first.appointmentId, 'current');
   }
 
+  // ─── OPD Appointment Slips ───────────────────────────────────────────
+  Future<OpdAppointment> createOpdAppointment(OpdAppointment appointment) async {
+    if (localDemoMode) {
+      return localStore.createOpdAppointment(appointment);
+    }
+
+    try {
+      final hospitalId = appointment.hospitalId.isEmpty ? 'ADMIN001' : appointment.hospitalId;
+      final apptId = appointment.appointmentId.isEmpty
+          ? 'OPD-${DateTime.now().millisecondsSinceEpoch}'
+          : appointment.appointmentId;
+      final savedAppt = appointment.copyWith(appointmentId: apptId, hospitalId: hospitalId);
+
+      // Save to /hospitals/{hospitalId}/opdAppointments/{appointmentId}
+      await _guard(
+        _db
+            .collection('hospitals')
+            .doc(hospitalId)
+            .collection('opdAppointments')
+            .doc(apptId)
+            .set(savedAppt.toFirestore(useServerTimestamp: true)),
+        'create OPD slip',
+      );
+
+      // Also mirror to /appointments/{appointmentId} for queue & doctor dashboard
+      final assignedDoctorId = savedAppt.doctorId ?? 'DOC001';
+      final assignedDoctorName = savedAppt.doctorName ?? savedAppt.doctorCategory;
+      final generalApt = Appointment(
+        appointmentId: apptId,
+        patientId: savedAppt.patientId ?? 'WALK_IN_${DateTime.now().millisecondsSinceEpoch}',
+        patientName: savedAppt.patientName,
+        doctorId: assignedDoctorId,
+        doctorName: assignedDoctorName,
+        scheduledAt: savedAppt.appointmentDate,
+        status: savedAppt.status,
+        type: 'opd_slip',
+        notes: savedAppt.doctorCategory,
+        createdAt: savedAppt.createdAt,
+      );
+
+      try {
+        await _guard(
+          _db.collection('appointments').doc(apptId).set(
+                generalApt.toFirestore(useServerTimestamp: true),
+              ),
+          'sync appointment to queue',
+        );
+      } catch (e) {
+        debugPrint('[HospitalAdminService] Mirroring appointment non-fatal error: $e');
+      }
+
+      return savedAppt;
+    } catch (e) {
+      debugPrint('[HospitalAdminService] Firestore error in createOpdAppointment, saving to local store: $e');
+      localDemoMode = true;
+      return localStore.createOpdAppointment(appointment);
+    }
+  }
+
+  Future<List<OpdAppointment>> getOpdAppointments({String hospitalId = 'ADMIN001'}) async {
+    if (localDemoMode) return localStore.allOpdAppointments();
+    try {
+      final snap = await _guard(
+        _db
+            .collection('hospitals')
+            .doc(hospitalId)
+            .collection('opdAppointments')
+            .orderBy('createdAt', descending: true)
+            .limit(100)
+            .get(),
+        'fetch OPD appointments',
+      );
+      return snap.docs.map((d) => OpdAppointment.fromFirestore(d)).toList();
+    } catch (e) {
+      debugPrint('[HospitalAdminService] getOpdAppointments fallback: $e');
+      return localStore.allOpdAppointments();
+    }
+  }
+
+  Future<List<OpdAppointment>> getTodayOpdAppointments({String hospitalId = 'ADMIN001'}) async {
+    final all = await getOpdAppointments(hospitalId: hospitalId);
+    final now = DateTime.now();
+    return all.where((a) {
+      return a.appointmentDate.year == now.year &&
+          a.appointmentDate.month == now.month &&
+          a.appointmentDate.day == now.day;
+    }).toList();
+  }
+
+  Future<List<String>> getDoctorCategories() async {
+    final doctors = await getDoctors();
+    final categories = <String>{};
+    for (final d in doctors) {
+      if (d.specialization.trim().isNotEmpty) {
+        categories.add(d.specialization.trim());
+      }
+    }
+    // Add standard categories to ensure full hospital department options
+    categories.addAll(defaultDoctorCategories);
+    return categories.toList();
+  }
+
   // ─── Doctors ─────────────────────────────────────────────────────────
   Future<List<HospitalDoctor>> getDoctors() async {
     if (localDemoMode) return localStore.roster();
@@ -197,22 +319,83 @@ class HospitalAdminService {
   // ─── Patients ────────────────────────────────────────────────────────
   Future<List<Patient>> getAllPatients() async {
     if (localDemoMode) return List.of(localStore.patients);
-    final snap = await _guard(
-      _db.collection('patients').limit(200).get(),
-      'fetch patients',
-    );
-    return snap.docs.map((d) => Patient.fromFirestore(d)).toList();
+    try {
+      final snap = await _guard(
+        _db.collection('patients').limit(200).get(),
+        'fetch patients',
+      );
+      return snap.docs.map((d) => Patient.fromFirestore(d)).toList();
+    } catch (e) {
+      debugPrint('[HospitalAdminService] getAllPatients error: $e');
+      return List.of(localStore.patients);
+    }
   }
 
   Future<List<Patient>> searchPatients(String query) async {
     final all = await getAllPatients();
     final q = query.trim().toLowerCase();
     if (q.isEmpty) return all;
+    final cleanQ = q.replaceAll(' ', '');
     return all
         .where((p) =>
             p.name.toLowerCase().contains(q) ||
             p.patientId.toLowerCase().contains(q) ||
-            p.phoneNumber.contains(q))
+            p.phoneNumber.replaceAll(' ', '').contains(cleanQ))
+        .toList();
+  }
+
+  /// Searches registered patients from Firebase or local demo store.
+  ///
+  /// Matches on patient name, patient ID, or phone number.
+  /// Works for both live Firestore registered patients (with patientId and QR)
+  /// and local demo patients (fallback).
+  Future<List<Patient>> searchRegisteredPatients(String query) async {
+    final q = query.trim().toLowerCase();
+    List<Patient> list = [];
+
+    // ALWAYS query Firestore first — even if localDemoMode was set as a dashboard fallback,
+    // real registered patients must always be searchable.
+    try {
+      final snap = await _db
+          .collection('patients')
+          .limit(200)
+          .get()
+          .timeout(const Duration(seconds: 4));
+      list = snap.docs
+          .map((d) => Patient.fromFirestore(d))
+          .where((p) => p.status == 'active' || p.status.isEmpty)
+          .toList();
+    } catch (e) {
+      debugPrint('[HospitalAdminService] Firestore server fetch failed, checking cache: $e');
+      try {
+        final cacheSnap = await _db
+            .collection('patients')
+            .limit(200)
+            .get(const GetOptions(source: Source.cache));
+        list = cacheSnap.docs
+            .map((d) => Patient.fromFirestore(d))
+            .where((p) => p.status == 'active' || p.status.isEmpty)
+            .toList();
+      } catch (cacheErr) {
+        debugPrint('[HospitalAdminService] Cache read error: $cacheErr');
+      }
+    }
+
+    // Only load demo store if Firestore returned NO patients at all AND in localDemoMode
+    if (list.isEmpty && localDemoMode) {
+      final demoList = localStore.patients
+          .where((p) => p.status == 'active' || p.status.isEmpty)
+          .toList();
+      list.addAll(demoList);
+    }
+
+    if (q.isEmpty) return list;
+    final cleanQ = q.replaceAll(' ', '');
+    return list
+        .where((p) =>
+            p.name.toLowerCase().contains(q) ||
+            p.patientId.toLowerCase().contains(q) ||
+            p.phoneNumber.replaceAll(' ', '').contains(cleanQ))
         .toList();
   }
 

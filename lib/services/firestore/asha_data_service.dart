@@ -19,9 +19,10 @@ import 'asha_local_demo_store.dart';
 ///
 /// Uses the centralized Firestore database — does NOT create separate databases.
 class AshaDataService {
-  AshaDataService();
+  AshaDataService({FirebaseFirestore? firestore}) : _firestore = firestore;
 
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore? _firestore;
+  FirebaseFirestore get _db => _firestore ?? FirebaseFirestore.instance;
 
   /// When true, all reads/writes are served from a built-in in-memory demo
   /// dataset instead of Firestore — used automatically when Firestore is

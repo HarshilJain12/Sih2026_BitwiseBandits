@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Central color palette for the Healthcare App.
+/// Central color palette for Arogya Seva.
 ///
 /// Design intent:
 /// - Trustworthy, calm, healthcare-oriented, government/public-service feel

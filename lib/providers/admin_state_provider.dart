@@ -5,6 +5,7 @@ import '../models/asha_worker.dart';
 import '../models/awareness_campaign.dart';
 import '../models/community_health_alert.dart';
 import '../models/hospital_doctor.dart';
+import '../models/opd_appointment.dart';
 import '../models/patient.dart';
 import '../services/firestore/hospital_admin_service.dart';
 
@@ -18,6 +19,7 @@ class AdminStateProvider extends ChangeNotifier {
   List<Appointment> _queue = [];
   List<Appointment> _completedToday = [];
   List<Appointment> _allAppointments = [];
+  List<OpdAppointment> _opdAppointments = [];
   List<Patient> _patients = [];
   List<HospitalDoctor> _doctors = [];
   List<CommunityHealthAlert> _alerts = [];
@@ -32,6 +34,7 @@ class AdminStateProvider extends ChangeNotifier {
   List<Appointment> get queue => _queue;
   List<Appointment> get completedToday => _completedToday;
   List<Appointment> get allAppointments => _allAppointments;
+  List<OpdAppointment> get opdAppointments => _opdAppointments;
   List<Patient> get patients => _patients;
   List<HospitalDoctor> get doctors => _doctors;
   List<CommunityHealthAlert> get alerts => _alerts;
@@ -72,6 +75,7 @@ class AdminStateProvider extends ChangeNotifier {
     _queue = await dataService.getTodayQueue();
     _completedToday = await dataService.getTodayCompleted();
     _allAppointments = await dataService.getAllAppointments();
+    _opdAppointments = await dataService.getOpdAppointments();
     _patients = await dataService.getAllPatients();
     _doctors = await dataService.getDoctors();
     _alerts = await dataService.getAllAlerts();
@@ -80,8 +84,34 @@ class AdminStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<OpdAppointment> createOpdAppointment(OpdAppointment appointment) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      final created = await dataService.createOpdAppointment(appointment);
+      _opdAppointments = await dataService.getOpdAppointments();
+      _queue = await dataService.getTodayQueue();
+      _allAppointments = await dataService.getAllAppointments();
+      _overview = await dataService.getOverviewStats();
+      return created;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<List<String>> getDoctorCategories() {
+    return dataService.getDoctorCategories();
+  }
+
   Future<List<Patient>> searchPatients(String query) {
     return dataService.searchPatients(query);
+  }
+
+  /// Searches only real Firebase-registered patients (with QR codes).
+  /// Used by the OPD slip screen to exclude demo/sample patients.
+  Future<List<Patient>> searchRegisteredPatients(String query) {
+    return dataService.searchRegisteredPatients(query);
   }
 
   Future<void> refreshQueue() async {

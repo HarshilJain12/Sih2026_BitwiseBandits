@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
-/// Typography definitions for the Healthcare App.
+/// Typography definitions for Arogya Seva.
 ///
 /// Uses Noto Sans which has excellent Devanagari support for Hindi and Marathi.
 /// Falls back to system fonts for any unsupported scripts.

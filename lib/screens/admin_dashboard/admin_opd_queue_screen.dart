@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/route_names.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/appointment.dart';
@@ -29,6 +31,8 @@ class AdminOpdQueueScreen extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.all(AppTheme.spacingMd),
                   children: [
+                    _newSlipActionBanner(context),
+                    const SizedBox(height: 12),
                     _summaryStrip(adminState),
                     const SizedBox(height: 12),
                     ..._doctorSections(context, adminState),
@@ -58,23 +62,79 @@ class AdminOpdQueueScreen extends StatelessWidget {
     );
   }
 
-  Widget _emptyState(BuildContext context, AdminStateProvider adminState) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+  Widget _newSlipActionBanner(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+        border: Border.all(color: AppColors.roleAdmin.withValues(alpha: 0.3)),
+      ),
+      child: Row(
         children: [
-          const Icon(Icons.groups_outlined,
-              size: 48, color: AppColors.textHint),
-          const SizedBox(height: 16),
-          const Text('No OPD tokens today.',
-              style: TextStyle(color: AppColors.textSecondary)),
-          const SizedBox(height: 16),
+          const Icon(Icons.receipt_long_rounded,
+              color: AppColors.roleAdmin, size: 22),
+          const SizedBox(width: 10),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Create OPD Slip',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14)),
+                Text('Search patient & generate slip in seconds',
+                    style: TextStyle(
+                        color: AppColors.textSecondary, fontSize: 11)),
+              ],
+            ),
+          ),
           ElevatedButton.icon(
-            onPressed: () => adminState.loadAll(),
-            icon: const Icon(Icons.refresh_rounded),
-            label: const Text('Reload'),
+            onPressed: () => context.push(RouteNames.adminOpdSlip),
+            icon: const Icon(Icons.add_rounded, size: 18),
+            label: const Text('⚡ New Slip'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.roleAdmin,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _emptyState(BuildContext context, AdminStateProvider adminState) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppTheme.spacingLg),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.groups_outlined,
+                size: 48, color: AppColors.textHint),
+            const SizedBox(height: 16),
+            const Text('No OPD tokens today.',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 15)),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () => context.push(RouteNames.adminOpdSlip),
+              icon: const Icon(Icons.receipt_long_rounded),
+              label: const Text('⚡ Create First OPD Slip'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.roleAdmin,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+            ),
+            const SizedBox(height: 8),
+            TextButton.icon(
+              onPressed: () => adminState.loadAll(),
+              icon: const Icon(Icons.refresh_rounded),
+              label: const Text('Reload Queue'),
+            ),
+          ],
+        ),
       ),
     );
   }

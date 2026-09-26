@@ -1,4 +1,4 @@
-/// The four user roles in the Healthcare App.
+/// The four user roles in Arogya Seva.
 ///
 /// Add new roles here as the system grows. Route guards and dashboards
 /// can switch on this enum in later chunks.

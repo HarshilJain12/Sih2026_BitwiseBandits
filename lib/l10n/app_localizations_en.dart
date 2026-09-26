@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Healthcare App';
+  String get appTitle => 'Arogya Seva';
 
   @override
   String get chooseLanguage => 'Choose your language';

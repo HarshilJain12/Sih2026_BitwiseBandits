@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -83,7 +84,22 @@ class PatientAiAnalysisService {
         fallbackPatientId: patientId,
         fallbackOwnerUid: _auth?.currentUser?.uid ?? '',
       );
-    }).handleError((_) => MedicalAiAnalysis.noData(patientId: patientId, ownerUid: ''));
+    }).transform(
+      StreamTransformer<MedicalAiAnalysis, MedicalAiAnalysis>.fromHandlers(
+        handleData: (data, sink) => sink.add(data),
+        handleError: (error, stackTrace, sink) {
+          if (kDebugMode) {
+            debugPrint('[PatientAiAnalysisService] Stream error for $patientId: $error');
+          }
+          sink.add(
+            MedicalAiAnalysis.noData(
+              patientId: patientId,
+              ownerUid: _auth?.currentUser?.uid ?? '',
+            ),
+          );
+        },
+      ),
+    );
   }
 
   /// Fetches the current AI analysis for a patient.
@@ -383,9 +399,17 @@ class PatientAiAnalysisService {
     }.toList();
 
     // Generate comprehensive combined summary
-    final combinedSummary = baseAnalysis.hasNoData || baseAnalysis.summary.isEmpty
-        ? newResult.summary
-        : '${baseAnalysis.summary} ${newResult.summary}'.trim();
+    final combinedSummary = _synthesizeSummary(
+      docSummaries: [
+        if (!baseAnalysis.hasNoData && baseAnalysis.summary.isNotEmpty) baseAnalysis.summary,
+        if (newResult.summary.isNotEmpty) newResult.summary,
+      ],
+      conditions: allConditions,
+      allergies: allAllergies,
+      medications: allMeds,
+      surgeries: allSurgeries,
+      findings: allFindings,
+    );
 
     return MedicalAiAnalysis(
       patientId: patientId,
@@ -457,12 +481,19 @@ class PatientAiAnalysisService {
       allFindings.addAll(doc.importantFindings);
     }
 
-    final summaries = docResults.map((d) => d.summary).toSet().join(' ');
+    final combinedSummary = _synthesizeSummary(
+      docSummaries: docResults.map((d) => d.summary).toList(),
+      conditions: allConditions,
+      allergies: allAllergies,
+      medications: allMeds,
+      surgeries: allSurgeries,
+      findings: allFindings.toList(),
+    );
 
     return MedicalAiAnalysis(
       patientId: patientId,
       ownerUid: ownerUid,
-      summary: summaries,
+      summary: combinedSummary,
       tags: mergedTags,
       conditions: allConditions,
       surgeries: allSurgeries,
@@ -476,5 +507,50 @@ class PatientAiAnalysisService {
       analysisVersion: 1,
       updatedAt: DateTime.now(),
     );
+  }
+
+  static String _synthesizeSummary({
+    required List<String> docSummaries,
+    required List<MedicalFinding> conditions,
+    required List<MedicalFinding> allergies,
+    required List<MedicalFinding> medications,
+    required List<MedicalFinding> surgeries,
+    required List<String> findings,
+  }) {
+    final clean = docSummaries
+        .map((s) => s.trim())
+        .where((s) => s.isNotEmpty)
+        .toSet()
+        .toList();
+
+    if (clean.length == 1) {
+      return clean.first;
+    }
+
+    if (clean.isNotEmpty) {
+      return clean.join('\n\n');
+    }
+
+    final parts = <String>[];
+    if (conditions.isNotEmpty) {
+      final names = conditions.map((c) => c.name).toSet().join(', ');
+      parts.add('Documented conditions on record: $names.');
+    }
+    if (allergies.isNotEmpty) {
+      final names = allergies.map((a) => a.name).toSet().join(', ');
+      parts.add('Allergy alert: $names.');
+    }
+    if (medications.isNotEmpty) {
+      final names = medications.map((m) => m.name).toSet().join(', ');
+      parts.add('Active medications: $names.');
+    }
+    if (surgeries.isNotEmpty) {
+      final names = surgeries.map((s) => s.name).toSet().join(', ');
+      parts.add('Past surgical history: $names.');
+    }
+    if (parts.isEmpty) {
+      return 'Medical records are uploaded and available on file.';
+    }
+    return parts.join(' ');
   }
 }

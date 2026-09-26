@@ -1,6 +1,6 @@
 {
-    "name": "healthcare_app",
-    "short_name": "healthcare_app",
+    "name": "Arogya Seva",
+    "short_name": "Arogya Seva",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

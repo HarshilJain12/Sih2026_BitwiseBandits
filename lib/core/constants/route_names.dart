@@ -3,7 +3,8 @@
 class RouteNames {
   RouteNames._();
 
-  static const String splash = '/';
+  static const String intro = '/';
+  static const String splash = '/splash';
   static const String languageSelection = '/language';
   static const String roleSelection = '/role-select';
 
@@ -57,10 +58,11 @@ class RouteNames {
   static const String ashaFollowUps = '/asha/follow-ups';
   static const String ashaProfile = '/asha/profile';
 
-  // Hospital Admin - Community Health Alerts
+  // Hospital Admin - Community Health Alerts & OPD
   static const String adminCommunityAlerts = '/admin/community-alerts';
   static const String adminCreateAwareness = '/admin/create-awareness';
   static const String adminDashboard = '/admin/dashboard';
+  static const String adminOpdSlip = '/admin/opd-slip';
 
   // Patient - Health Awareness
   static const String patientAwareness = '/patient/awareness';

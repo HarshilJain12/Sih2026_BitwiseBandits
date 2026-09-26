@@ -72,8 +72,8 @@ class GeminiMedicalAnalysisService {
       );
 
       final prompt = '''
-You are a medical document information extraction assistant for a patient health records platform.
-Your ONLY responsibility is to read the attached medical document and extract factual, documented healthcare information.
+You are an expert clinical document understanding AI assistant for a healthcare management platform.
+Your responsibility is to extract factual, documented healthcare information from the attached medical file in a format that is immediately beneficial to consulting DOCTORS while being easily understood by the PATIENT.
 
 CRITICAL MEDICAL SAFETY & NON-DIAGNOSTIC RULES:
 1. You are NOT a diagnosing physician. Do NOT diagnose the patient.
@@ -81,15 +81,20 @@ CRITICAL MEDICAL SAFETY & NON-DIAGNOSTIC RULES:
 3. Do NOT invent or infer unstated diagnoses, medications, surgeries, allergies, symptoms, or lab results.
 4. Distinguish between confirmed history and possible/suspected findings.
 5. PRESERVE UNCERTAINTY: If a report says "Possible diabetes", the finding MUST be "Possible diabetes mentioned", NOT "Diabetes".
-6. TAGS: Generate concise, clinically useful high-level tags (e.g., "Diabetes Mentioned", "Cardiac History", "Hypertension Mentioned", "History of Open-heart Surgery", "Previous Surgery", "Kidney Condition Mentioned", "Allergy Mentioned", "Current Medication", "Pregnancy-related Record").
-7. Return ONLY valid JSON conforming to the requested schema.
+6. TAGS: Generate concise, clinically useful high-level tags (e.g., "Diabetes Mellitus", "Hypertension", "Cardiac History", "Previous Surgery", "Allergy Alert", "Active Medication", "Lab Diagnostics").
+
+SUMMARY WRITING GUIDELINES:
+- Write a clear, 2-to-4 sentence summary combining a patient-friendly overview with key clinical observations for doctors.
+- State clearly what type of record this is (e.g. lab report, discharge summary, prescription).
+- Highlight key clinical data points that matter to a doctor (e.g. key lab values, diagnosed conditions, specific drug names/dosages, notable allergy flags).
+- Use clear, professional, plain language so both the patient and clinician understand it at a glance.
 
 Target Schema:
 {
-  "summary": "Concise summary of explicitly documented findings.",
+  "summary": "Clear, concise dual-audience summary highlighting what the document is and its essential clinical findings.",
   "tags": [
     {
-      "label": "Tag Title (e.g. Diabetes Mentioned)",
+      "label": "Tag Title (e.g. Diabetes Mellitus)",
       "category": "condition | surgery | medication | allergy | test | general",
       "evidence": "Exact or near-exact quote from document supporting this tag."
     }
@@ -123,8 +128,8 @@ Target Schema:
     }
   ],
   "importantFindings": [
-    "Important finding 1",
-    "Important finding 2"
+    "Important clinical finding or lab value 1",
+    "Important clinical finding or lab value 2"
   ]
 }
 
@@ -473,9 +478,27 @@ Record ID: "${record.recordId}"
       );
     }
 
-    final summary = tags.isNotEmpty
-        ? 'Uploaded medical record (${record.originalFileName}) contains documented information regarding ${tags.map((t) => t.label).join(", ")}.'
-        : 'Uploaded medical document (${record.originalFileName}) is available on file.';
+    final summarySentences = <String>[];
+    if (conditions.isNotEmpty) {
+      final conds = conditions.map((c) => c.name).toSet().join(', ');
+      summarySentences.add('Documented health conditions on record include $conds.');
+    }
+    if (allergies.isNotEmpty) {
+      summarySentences.add('Patient has noted sensitivity/allergy documentation on file.');
+    }
+    if (medications.isNotEmpty) {
+      summarySentences.add('Prescription regimen is recorded for clinical review.');
+    }
+    if (surgeries.isNotEmpty) {
+      summarySentences.add('Past surgical history is noted.');
+    }
+    if (combined.contains('lab') || combined.contains('report') || combined.contains('test')) {
+      summarySentences.add('Diagnostic test and Lab Reports are recorded for clinical evaluation.');
+    }
+    if (summarySentences.isEmpty) {
+      summarySentences.add('Medical record (${record.originalFileName}) is available on file for clinical evaluation.');
+    }
+    final summary = summarySentences.join(' ');
 
     return SingleDocumentAnalysisResult(
       recordId: record.recordId,
